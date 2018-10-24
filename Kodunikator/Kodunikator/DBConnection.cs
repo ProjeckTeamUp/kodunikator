@@ -17,15 +17,17 @@ namespace Kodunikator
 
         private const string databaseName = "db100007984"; // Nazwa bazy danych
         private const string password = "1qsc@WDVawix"; // Hasło do bazy danych
+        private const string serverAdress = "mysql-pol-tronic.ogicom.pl"; // Adres serwera bazy danych
+        private const string serverPort = "3306"; // Port serwera
 
         public MySqlConnection connection = null;
 
         /// <summary>
-        // Łączy z bazą danych.
+        /// Łączy z bazą danych.
         /// </summary>
         public void Connect()
         {
-            string connstring = string.Format("Server=mysql-pol-tronic.ogicom.pl; Database={0}; UID={0}; Pwd={1}; Port=3306", databaseName, password);
+            string connstring = string.Format("Server={0}; Database={1}; UID={1}; Pwd={2}; Port={3}", serverAdress, databaseName, password, serverPort);
             connection = new MySqlConnection(connstring);
             connection.Open();
         }
