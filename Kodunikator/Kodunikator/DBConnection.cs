@@ -36,5 +36,24 @@ namespace Kodunikator
         {
             connection.Close();
         }
+
+		public bool Login(string name, string pass)
+		{
+			string query = string.Format("SELECT Name FROM Konta WHERE Name='{0}' AND Password='{1}'", name, pass);
+			List<string> rekordy = new List<string>();
+			var cmd = new MySqlCommand(query, connection);
+			var reader = cmd.ExecuteReader();
+			while (reader.Read())
+			{
+				rekordy.Add(reader.GetString(0));
+			}
+			reader.Close();
+			if(rekordy.Count != 0)
+			{
+				if (rekordy[0] == name)
+					return true;
+			}
+			return false;
+		}
     }
 }
