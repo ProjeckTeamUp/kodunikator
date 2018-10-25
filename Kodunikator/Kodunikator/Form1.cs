@@ -18,7 +18,8 @@ namespace Kodunikator
 
         public Form1()
         {
-            InitializeComponent();
+			InitializeComponent();
+			ConnectToDatabase();
         }
 
         /// <summary>
@@ -26,23 +27,17 @@ namespace Kodunikator
         /// </summary>
         public void ConnectToDatabase()
         {
-            DBConnection dbcon = new DBConnection();
+            dbcon = new DBConnection();
             dbcon.Connect();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void sign_btn_Click(object sender, EventArgs e)
         {
-            /*
-            string query = "SELECT Name FROM Konta";
-            List<string> rekordy = new List<string>();
-            var cmd = new MySqlCommand(query, dbcon.connection);
-            var reader = cmd.ExecuteReader();           
-            while (reader.Read())
-            {
-                rekordy.Add(reader.GetString(0));
-                label1.Text = rekordy[0];
-            
-            } */
-        }
-    }
+			if (dbcon != null && dbcon.Login(username_field.Text, password_field.Text))
+			{
+				login_sign.Text = "Success";
+				//dbcon.Close();
+			}
+		}
+	}
 }
