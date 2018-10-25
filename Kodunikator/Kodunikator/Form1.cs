@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data; // DEL
-using MySql.Data.MySqlClient; // DEL 
+using MySql.Data;
+using MySql.Data.MySqlClient;
 
 namespace Kodunikator
 {
@@ -33,11 +33,22 @@ namespace Kodunikator
 
         private void sign_btn_Click(object sender, EventArgs e)
         {
-			if (dbcon != null && dbcon.Login(username_field.Text, password_field.Text))
-			{
-				login_sign.Text = "Success";
-				//dbcon.Close();
-			}
+            if (dbcon != null)
+            {
+                if (dbcon.Login(username_field.Text, password_field.Text))
+                {
+                    login_sign.Text = "Success";
+                    Log.NewLog("Udane zalogowanie do konta kodunikatora.");
+                    //dbcon.Close();
+                }
+                else
+                {
+                    login_sign.Text = "Wrong user name or password";
+                    Log.NewLog("Nieudana próba zalogowania do konta kodunikatora.");
+                }
+            }
+            else
+                Log.NewError("Problem z połączeniem z bazą danych.");
 		}
 	}
 }
