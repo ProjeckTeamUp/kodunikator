@@ -12,11 +12,11 @@ using MySql.Data.MySqlClient;
 
 namespace Kodunikator
 {
-    public partial class Form1 : Form
+    public partial class LogForm : Form
     {
         private DBConnection dbcon; // odwołanie do łącza z baza danych
 
-        public Form1()
+        public LogForm()
         {
 			InitializeComponent();
 			ConnectToDatabase();
@@ -43,12 +43,21 @@ namespace Kodunikator
                 }
                 else
                 {
-                    login_sign.Text = "Wrong user name or password";
+                    log_error_msg.Text = "Wrong user name or password";
+					log_error_msg.Visible = true;
                     Log.NewLog("Nieudana próba zalogowania do konta kodunikatora.");
                 }
             }
             else
                 Log.NewError("Problem z połączeniem z bazą danych.");
+		}
+
+		private void register_btn_Click(object sender, EventArgs e)
+		{
+			RegisterForm tmp = new RegisterForm();
+			tmp.Dbcon = dbcon;
+			tmp.Show();
+			Log.NewError("User chce się zarejestrować.");
 		}
 	}
 }
