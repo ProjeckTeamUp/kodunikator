@@ -19,6 +19,7 @@ namespace Kodunikator
 		private const string password = "1qsc@WDVawix"; // Hasło do bazy danych
 		private const string serverAdress = "mysql-pol-tronic.ogicom.pl"; // Adres serwera bazy danych
 		private const string serverPort = "3306"; // Port serwera
+		private bool connected = false;
 
 		public MySqlConnection connection = null;
 
@@ -29,13 +30,17 @@ namespace Kodunikator
 		{
 			string connstring = string.Format("Server={0}; Database={1}; UID={1}; Pwd={2}; Port={3}", serverAdress, databaseName, password, serverPort);
 			connection = new MySqlConnection(connstring);
+			connected = true;
 			connection.Open();
 		}
 
 		public void Close()
 		{
+			connected = false;
 			connection.Close();
 		}
+
+		public bool isConnected() { return connected; }
 
 		/// <summary>
 		/// Zwraca dla czego nie powiodła się rejestracja albo pustą pustą linijkę przy udanej rejestracji.

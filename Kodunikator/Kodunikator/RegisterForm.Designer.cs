@@ -132,10 +132,11 @@
 			// 
 			// RegisterForm
 			// 
+			this.AcceptButton = this.register_btn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.ClientSize = new System.Drawing.Size(426, 298);
+			this.ClientSize = new System.Drawing.Size(568, 298);
 			this.Controls.Add(this.reg_error_msg);
 			this.Controls.Add(this.register_btn);
 			this.Controls.Add(this.reg_conf_pass_field);
@@ -145,6 +146,7 @@
 			this.Controls.Add(this.reg_name_sign);
 			this.Controls.Add(this.reg_name_field);
 			this.Controls.Add(this.registration_sign);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "RegisterForm";
 			this.Text = "Registration";
 			this.ResumeLayout(false);

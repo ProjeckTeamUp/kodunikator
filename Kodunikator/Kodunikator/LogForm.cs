@@ -33,31 +33,59 @@ namespace Kodunikator
 
         private void sign_btn_Click(object sender, EventArgs e)
         {
-            if (dbcon != null)
-            {
-                if (dbcon.Login(username_field.Text, password_field.Text))
-                {
-                    login_sign.Text = "Success";
-                    Log.NewLog("Udane zalogowanie do konta kodunikatora.");
-                    //dbcon.Close();
-                }
-                else
-                {
-                    log_error_msg.Text = "Wrong user name or password";
+			if (dbcon != null)
+			{
+				for(int i=0; i<5; i++)
+				{
+					if (!dbcon.isConnected())
+					{
+						dbcon.Connect();
+						System.Threading.Thread.Sleep(50);
+					}
+					else
+						break;
+				}
+				if (dbcon.isConnected())
+				{
+					if (dbcon.Login(username_field.Text, password_field.Text))
+					{
+						Log.NewLog("Udane zalogowanie do konta kodunikatora.");
+						dbcon.Close();
+						Program.StartKodunikator();
+					}
+					else
+					{
+						log_error_msg.Text = "Wrong user name or password";
+						log_error_msg.Visible = true;
+						Log.NewLog("Nieudana próba zalogowania do konta kodunikatora.");
+					}
+				}
+				else
+				{
+					Log.NewError("Problem z połączeniem z bazą danych.");
+					log_error_msg.Text = "DataBase connection error.";
 					log_error_msg.Visible = true;
-                    Log.NewLog("Nieudana próba zalogowania do konta kodunikatora.");
-                }
-            }
-            else
-                Log.NewError("Problem z połączeniem z bazą danych.");
+				}
+			}
+			else
+			{
+				Log.NewError("Problem z połączeniem z bazą danych. Ponowna próba połączenia się.");
+				log_error_msg.Text = "DataBase connection error. Try again.";
+				log_error_msg.Visible = true;
+				ConnectToDatabase();
+			}
 		}
 
 		private void register_btn_Click(object sender, EventArgs e)
 		{
 			RegisterForm tmp = new RegisterForm();
 			tmp.Dbcon = dbcon;
+			tmp.Location = this.Location;
+			tmp.StartPosition = FormStartPosition.Manual;
+			tmp.FormClosing += delegate { this.Show(); };
 			tmp.Show();
-			Log.NewError("User chce się zarejestrować.");
+			this.Hide();
+			Log.NewLog("User chce się zarejestrować.");
 		}
 	}
 }

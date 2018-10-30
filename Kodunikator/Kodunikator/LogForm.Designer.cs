@@ -34,6 +34,7 @@
 			this.login_sign = new System.Windows.Forms.Label();
 			this.register_btn = new System.Windows.Forms.Button();
 			this.log_error_msg = new System.Windows.Forms.Label();
+			this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
 			this.SuspendLayout();
 			// 
 			// sign_btn
@@ -99,16 +100,18 @@
 			// 
 			// LogForm
 			// 
+			this.AcceptButton = this.sign_btn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.ClientSize = new System.Drawing.Size(284, 261);
+			this.ClientSize = new System.Drawing.Size(365, 261);
 			this.Controls.Add(this.log_error_msg);
 			this.Controls.Add(this.register_btn);
 			this.Controls.Add(this.login_sign);
 			this.Controls.Add(this.password_field);
 			this.Controls.Add(this.username_field);
 			this.Controls.Add(this.sign_btn);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "LogForm";
 			this.Text = "Login";
 			this.ResumeLayout(false);
@@ -123,6 +126,7 @@
 		private System.Windows.Forms.Label login_sign;
 		private System.Windows.Forms.Button register_btn;
 		private System.Windows.Forms.Label log_error_msg;
+		private System.ComponentModel.BackgroundWorker backgroundWorker1;
 	}
 }
 
