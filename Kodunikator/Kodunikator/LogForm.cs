@@ -51,7 +51,7 @@ namespace Kodunikator
 					{
 						Log.NewLog("Udane zalogowanie do konta kodunikatora.");
 						dbcon.Close();
-						Program.StartKodunikator();
+                        Program.LoginToFb();
 					}
 					else
 					{

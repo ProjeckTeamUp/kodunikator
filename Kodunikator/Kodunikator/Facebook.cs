@@ -54,14 +54,15 @@ namespace Kodunikator
         /// <summary>
         /// Wczytuje wartość adresu email i hasła do konta facebook z pliku. Login i hasło zwraca w formie tablicy 'string'.
         /// </summary>
-        private static string[] ReadMailPassword()
+        public static string[] ReadMailPassword()
         {
-            string[] tmp = new string[2];
+            string[] tmp = new string[3];
             using (System.IO.StreamReader file =
             new System.IO.StreamReader(loginFile))
             {
                 tmp[0] = file.ReadLine();
                 tmp[1] = file.ReadLine();
+                tmp[2] = file.ReadLine();
             }
 
             return tmp;

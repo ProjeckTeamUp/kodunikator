@@ -69,12 +69,19 @@
   <ItemGroup>
     <Compile Include="DBConnection.cs" />
     <Compile Include="Facebook.cs" />
+    <Compile Include="FBLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FBLogin.Designer.cs">
+      <DependentUpon>FBLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="LogForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Friend.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -90,6 +97,9 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FBLogin.resx">
+      <DependentUpon>FBLogin.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
     </EmbeddedResource>

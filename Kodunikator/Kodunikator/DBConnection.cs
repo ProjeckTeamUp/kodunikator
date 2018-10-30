@@ -77,5 +77,17 @@ namespace Kodunikator
 			}
 			return false;
 		}
+
+        /// <summary>
+        /// Pobiera liste znajomych z bazy danych.
+        /// </summary>
+        public List<Friend> LoadFriendList(string username)
+        {
+            List<Friend> friendList = new List<Friend>();
+
+            // TODO // tworzenie listy znajomych na podstawie bazy danych
+
+            return friendList;
+        }
     }
 }
