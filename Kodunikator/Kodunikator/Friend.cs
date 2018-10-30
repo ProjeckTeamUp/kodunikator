@@ -9,7 +9,7 @@ namespace Kodunikator
     /// <summary>
     /// Klasa przyjaciela, pełni role kontaktu z którym możemy pisać. Zawiera jego FB ID, które zapewnia komunikacje oraz nazwe użytkownika, która jest wyświetlana na liście przyjaciół.
     /// </summary>
-    class Friend
+    public class Friend
     {
         public string nickname; // Nazwa przyjaciela, która będzie wyświetlana w liście przyjaciół
         public string fbID; // ID konta facebook przyjaciela
