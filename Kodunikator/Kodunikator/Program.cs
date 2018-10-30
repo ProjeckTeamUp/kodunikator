@@ -12,15 +12,16 @@ namespace Kodunikator
 
 		private static MainForm mainForm = null;
 		private static LogForm logForm = null;
-		/// <summary>
-		/// Główny punkt wejścia dla aplikacji.
-		/// </summary>
-		[STAThread]
+        private static FBLogin fbLogin = null;
+
+        /// <summary>
+        /// Główny punkt wejścia dla aplikacji.
+        /// </summary>
+        [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-			mainForm = new MainForm();
 			logForm = new LogForm();
             Application.Run(logForm);
         }
@@ -30,23 +31,31 @@ namespace Kodunikator
 		/// </summary>
 		public static void StartKodunikator()
 		{
-			mainForm.Location = logForm.Location;
-			mainForm.StartPosition = FormStartPosition.Manual;
-			mainForm.FormClosing += delegate { logForm.Close(); };
-			logForm.Hide();
-			mainForm.Show();
+            mainForm = new MainForm();
+            mainForm.Show();
+            fbLogin.Hide();
+            fbLogin.Close();          
 		}
+
+        /// <summary>
+        /// Logowanie do konta facebook
+        /// </summary>
+        public static void LoginToFb()
+        {
+            fbLogin = new FBLogin();
+            fbLogin.Show();
+            logForm.Hide();
+        }
 
 
 		/// <summary>
 		/// Wylogowanie z aplikacji (żeby zalogować się na inne konto)
 		/// </summary>
-		public static void StartLogin()
+		public static void LogOut()
 		{
-			logForm.Location = mainForm.Location;
-			logForm.StartPosition = FormStartPosition.Manual;
+            mainForm.Hide();
 			mainForm.Close();
-			logForm.Show();
+            logForm.Show();          
 		}
     }
 }
