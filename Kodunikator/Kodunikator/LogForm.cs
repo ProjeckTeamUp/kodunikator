@@ -16,11 +16,13 @@ namespace Kodunikator
     {
         private DBConnection dbcon; // odwołanie do łącza z baza danych
 
+		private RegisterForm registerForm;
+
         public LogForm()
         {
 			InitializeComponent();
 			ConnectToDatabase();
-        }
+		}
 
         /// <summary>
         /// Łączy z baza danych.
@@ -51,7 +53,7 @@ namespace Kodunikator
 					{
 						Log.NewLog("Udane zalogowanie do konta kodunikatora.");
 						dbcon.Close();
-                        Program.LoginToFb();
+                        Program.StartKodunikator();
 					}
 					else
 					{
@@ -76,14 +78,20 @@ namespace Kodunikator
 			}
 		}
 
+		public void backToLog()
+		{
+			registerForm.Close();
+			Log.NewLog("User successfully registered");
+		}
+
 		private void register_btn_Click(object sender, EventArgs e)
 		{
-			RegisterForm tmp = new RegisterForm();
-			tmp.Dbcon = dbcon;
-			tmp.Location = this.Location;
-			tmp.StartPosition = FormStartPosition.Manual;
-			tmp.FormClosing += delegate { this.Show(); };
-			tmp.Show();
+			registerForm = new RegisterForm();
+			registerForm.Dbcon = dbcon;
+			registerForm.Location = this.Location;
+			registerForm.StartPosition = FormStartPosition.Manual;
+			registerForm.FormClosing += delegate { this.Show(); };
+			registerForm.Show();
 			this.Hide();
 			Log.NewLog("User chce się zarejestrować.");
 		}

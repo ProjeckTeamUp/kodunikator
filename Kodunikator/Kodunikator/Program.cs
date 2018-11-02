@@ -23,6 +23,7 @@ namespace Kodunikator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 			logForm = new LogForm();
+			mainForm = new MainForm();
             Application.Run(logForm);
         }
 
@@ -31,21 +32,15 @@ namespace Kodunikator
 		/// </summary>
 		public static void StartKodunikator()
 		{
-            mainForm = new MainForm();
-            mainForm.Show();
-            fbLogin.Hide();
-            fbLogin.Close();          
+			mainForm.FormClosing += delegate { logForm.Close(); };
+			logForm.Hide();
+			mainForm.Show();      
 		}
 
-        /// <summary>
-        /// Logowanie do konta facebook
-        /// </summary>
-        public static void LoginToFb()
-        {
-            fbLogin = new FBLogin();
-            fbLogin.Show();
-            logForm.Hide();
-        }
+		public static void RegisterSuccess()
+		{
+			logForm.backToLog();
+		}
 
 
 		/// <summary>
@@ -53,7 +48,9 @@ namespace Kodunikator
 		/// </summary>
 		public static void LogOut()
 		{
-            mainForm.Hide();
+			logForm.Location = mainForm.Location;
+			logForm.StartPosition = FormStartPosition.Manual;
+			mainForm.Hide();
 			mainForm.Close();
             logForm.Show();          
 		}

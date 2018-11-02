@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBConnection.cs" />
+    <Compile Include="Encrypter.cs" />
     <Compile Include="Facebook.cs" />
     <Compile Include="FBLogin.cs">
       <SubType>Form</SubType>

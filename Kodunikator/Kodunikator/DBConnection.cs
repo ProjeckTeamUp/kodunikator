@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 
@@ -45,35 +46,58 @@ namespace Kodunikator
 		/// <summary>
 		/// Zwraca dla czego nie powiodła się rejestracja albo pustą pustą linijkę przy udanej rejestracji.
 		/// </summary>
-		public string RegisterUser(string name, string pass)
+		public async void RegisterUserAsync(Label warningFeild, string name, string pass, string fb_mail, string fb_pass)
 		{
-			if (Login(name, pass))
+			string checkQuery = string.Format("SELECT Name FROM Konta WHERE Name='{0}'", name);
+			var cmd4Check = new MySqlCommand(checkQuery, connection);
+			List<string> tmp = new List<string>();
+			var reader = cmd4Check.ExecuteReader();
+			while (reader.Read())
 			{
-				return "Przy rejestracji podano usera co już istnieje.";
+				tmp.Add(reader.GetString(0));
 			}
-			string query = string.Format("INSERT INTO Konta (Name, Password, FB_ID, Friends) VALUES ('{0}', '{1}', NULL, NULL)", name, pass);
+			reader.Close();
+			if(tmp.Count != 0)
+			{
+				warningFeild.Text = "User with this username already exists";
+				warningFeild.Visible = true;
+				Log.NewLog("User with this username already exists");
+			}
+			if(!await Facebook.LogIn(fb_mail, fb_pass))
+			{
+				warningFeild.Text = "Facebook verification fail.";
+				warningFeild.Visible = true;
+				Log.NewLog("Facebook verification fail.");
+			}
+			string query = string.Format("INSERT INTO Konta (Name, Password, FB_ID, Friends, FB_mail, FB_password) VALUES ('{0}', '{1}', NULL, NULL, '{2}', '{3}')", name, Encrypter.HashThePassword(pass), fb_mail, Encrypter.Encrypt(fb_pass, pass));
 			var cmd = new MySqlCommand(query, connection);
 			if (cmd.ExecuteNonQuery() != 0)
-				return "";
+			{
+				Facebook.LogOut();
+				Program.RegisterSuccess();
+			}
 
-			return "Unknown registration error.";
+			warningFeild.Text = "Unknown registration error.";
+			warningFeild.Visible = true;
+			Log.NewLog("Unknown registration error.");
 		}
 
 		public bool Login(string name, string pass)
 		{
-			string query = string.Format("SELECT Name FROM Konta WHERE Name='{0}' AND Password='{1}'", name, pass);
-			List<string> rekordy = new List<string>();
+			string query = string.Format("SELECT FB_mail, FB_password FROM Konta WHERE Name='{0}' AND Password='{1}'", name, Encrypter.HashThePassword(pass));
 			var cmd = new MySqlCommand(query, connection);
 			var reader = cmd.ExecuteReader();
+			string fbMail = null, fbPass = null;
 			while (reader.Read())
 			{
-				rekordy.Add(reader.GetString(0));
+				fbMail = reader.GetString("FB_mail");
+				fbPass = reader.GetString("FB_password");
 			}
 			reader.Close();
-			if(rekordy.Count != 0)
+			if (fbMail != null && fbPass != null)
 			{
-				if (rekordy[0] == name)
-					return true;
+				//save facebook password or log in
+				return true;
 			}
 			return false;
 		}

@@ -35,18 +35,7 @@ namespace Kodunikator
 				reg_error_msg.Visible = true;
 				return;
 			}
-			string msg = dbcon.RegisterUser(reg_name_field.Text, reg_pass_field.Text);
-			if (msg.Length == 0)
-			{
-				Close();
-				Log.NewLog("Udana rejestracja usera pod imieniem: " + reg_name_field.Text + ".");
-			}
-			else
-			{
-				reg_error_msg.Text = msg;
-				reg_error_msg.Visible = true;
-				Log.NewLog(msg);
-			}
+			dbcon.RegisterUserAsync(reg_error_msg, reg_name_field.Text, reg_pass_field.Text, reg_fb_mail_field.Text, reg_fb_pass_field.Text);
 		}
 	}
 }

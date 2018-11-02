@@ -37,6 +37,10 @@
 			this.reg_conf_pass_field = new System.Windows.Forms.TextBox();
 			this.register_btn = new System.Windows.Forms.Button();
 			this.reg_error_msg = new System.Windows.Forms.Label();
+			this.reg_fb_mail_sign = new System.Windows.Forms.Label();
+			this.reg_fb_pass_sign = new System.Windows.Forms.Label();
+			this.reg_fb_mail_field = new System.Windows.Forms.TextBox();
+			this.reg_fb_pass_field = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// registration_sign
@@ -52,7 +56,7 @@
 			// 
 			// reg_name_field
 			// 
-			this.reg_name_field.Location = new System.Drawing.Point(142, 66);
+			this.reg_name_field.Location = new System.Drawing.Point(176, 66);
 			this.reg_name_field.MaxLength = 30;
 			this.reg_name_field.Name = "reg_name_field";
 			this.reg_name_field.Size = new System.Drawing.Size(186, 20);
@@ -63,7 +67,7 @@
 			this.reg_name_sign.AutoSize = true;
 			this.reg_name_sign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.reg_name_sign.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-			this.reg_name_sign.Location = new System.Drawing.Point(87, 70);
+			this.reg_name_sign.Location = new System.Drawing.Point(105, 70);
 			this.reg_name_sign.Name = "reg_name_sign";
 			this.reg_name_sign.Size = new System.Drawing.Size(49, 16);
 			this.reg_name_sign.TabIndex = 2;
@@ -74,7 +78,7 @@
 			this.reg_pass_sign.AutoSize = true;
 			this.reg_pass_sign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.reg_pass_sign.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-			this.reg_pass_sign.Location = new System.Drawing.Point(60, 107);
+			this.reg_pass_sign.Location = new System.Drawing.Point(78, 107);
 			this.reg_pass_sign.Name = "reg_pass_sign";
 			this.reg_pass_sign.Size = new System.Drawing.Size(76, 16);
 			this.reg_pass_sign.TabIndex = 3;
@@ -85,7 +89,7 @@
 			this.reg_conf_pass_sign.AutoSize = true;
 			this.reg_conf_pass_sign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.reg_conf_pass_sign.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-			this.reg_conf_pass_sign.Location = new System.Drawing.Point(5, 146);
+			this.reg_conf_pass_sign.Location = new System.Drawing.Point(23, 142);
 			this.reg_conf_pass_sign.Name = "reg_conf_pass_sign";
 			this.reg_conf_pass_sign.Size = new System.Drawing.Size(131, 16);
 			this.reg_conf_pass_sign.TabIndex = 4;
@@ -93,7 +97,7 @@
 			// 
 			// reg_pass_field
 			// 
-			this.reg_pass_field.Location = new System.Drawing.Point(142, 103);
+			this.reg_pass_field.Location = new System.Drawing.Point(176, 103);
 			this.reg_pass_field.MaxLength = 30;
 			this.reg_pass_field.Name = "reg_pass_field";
 			this.reg_pass_field.PasswordChar = '*';
@@ -102,7 +106,7 @@
 			// 
 			// reg_conf_pass_field
 			// 
-			this.reg_conf_pass_field.Location = new System.Drawing.Point(142, 142);
+			this.reg_conf_pass_field.Location = new System.Drawing.Point(176, 138);
 			this.reg_conf_pass_field.MaxLength = 30;
 			this.reg_conf_pass_field.Name = "reg_conf_pass_field";
 			this.reg_conf_pass_field.PasswordChar = '*';
@@ -111,10 +115,10 @@
 			// 
 			// register_btn
 			// 
-			this.register_btn.Location = new System.Drawing.Point(252, 184);
+			this.register_btn.Location = new System.Drawing.Point(287, 253);
 			this.register_btn.Name = "register_btn";
 			this.register_btn.Size = new System.Drawing.Size(75, 30);
-			this.register_btn.TabIndex = 7;
+			this.register_btn.TabIndex = 10;
 			this.register_btn.Text = "Register";
 			this.register_btn.UseVisualStyleBackColor = true;
 			this.register_btn.Click += new System.EventHandler(this.register_btn_Click);
@@ -130,13 +134,56 @@
 			this.reg_error_msg.Text = "Error";
 			this.reg_error_msg.Visible = false;
 			// 
+			// reg_fb_mail_sign
+			// 
+			this.reg_fb_mail_sign.AutoSize = true;
+			this.reg_fb_mail_sign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.reg_fb_mail_sign.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+			this.reg_fb_mail_sign.Location = new System.Drawing.Point(29, 176);
+			this.reg_fb_mail_sign.Name = "reg_fb_mail_sign";
+			this.reg_fb_mail_sign.Size = new System.Drawing.Size(125, 16);
+			this.reg_fb_mail_sign.TabIndex = 9;
+			this.reg_fb_mail_sign.Text = "Facebook e-mail";
+			// 
+			// reg_fb_pass_sign
+			// 
+			this.reg_fb_pass_sign.AutoSize = true;
+			this.reg_fb_pass_sign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.reg_fb_pass_sign.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+			this.reg_fb_pass_sign.Location = new System.Drawing.Point(5, 211);
+			this.reg_fb_pass_sign.Name = "reg_fb_pass_sign";
+			this.reg_fb_pass_sign.Size = new System.Drawing.Size(149, 16);
+			this.reg_fb_pass_sign.TabIndex = 10;
+			this.reg_fb_pass_sign.Text = "Facebook password";
+			// 
+			// reg_fb_mail_field
+			// 
+			this.reg_fb_mail_field.Location = new System.Drawing.Point(176, 172);
+			this.reg_fb_mail_field.MaxLength = 50;
+			this.reg_fb_mail_field.Name = "reg_fb_mail_field";
+			this.reg_fb_mail_field.Size = new System.Drawing.Size(186, 20);
+			this.reg_fb_mail_field.TabIndex = 7;
+			// 
+			// reg_fb_pass_field
+			// 
+			this.reg_fb_pass_field.Location = new System.Drawing.Point(176, 207);
+			this.reg_fb_pass_field.MaxLength = 50;
+			this.reg_fb_pass_field.Name = "reg_fb_pass_field";
+			this.reg_fb_pass_field.PasswordChar = '*';
+			this.reg_fb_pass_field.Size = new System.Drawing.Size(186, 20);
+			this.reg_fb_pass_field.TabIndex = 8;
+			// 
 			// RegisterForm
 			// 
 			this.AcceptButton = this.register_btn;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.ClientSize = new System.Drawing.Size(568, 298);
+			this.ClientSize = new System.Drawing.Size(568, 331);
+			this.Controls.Add(this.reg_fb_pass_field);
+			this.Controls.Add(this.reg_fb_mail_field);
+			this.Controls.Add(this.reg_fb_pass_sign);
+			this.Controls.Add(this.reg_fb_mail_sign);
 			this.Controls.Add(this.reg_error_msg);
 			this.Controls.Add(this.register_btn);
 			this.Controls.Add(this.reg_conf_pass_field);
@@ -165,5 +212,9 @@
 		private System.Windows.Forms.TextBox reg_conf_pass_field;
 		private System.Windows.Forms.Button register_btn;
 		private System.Windows.Forms.Label reg_error_msg;
+		private System.Windows.Forms.Label reg_fb_mail_sign;
+		private System.Windows.Forms.Label reg_fb_pass_sign;
+		private System.Windows.Forms.TextBox reg_fb_mail_field;
+		private System.Windows.Forms.TextBox reg_fb_pass_field;
 	}
 }
