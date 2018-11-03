@@ -78,12 +78,6 @@ namespace Kodunikator
 			}
 		}
 
-		public void backToLog()
-		{
-			registerForm.Close();
-			Log.NewLog("User successfully registered");
-		}
-
 		private void register_btn_Click(object sender, EventArgs e)
 		{
 			registerForm = new RegisterForm();

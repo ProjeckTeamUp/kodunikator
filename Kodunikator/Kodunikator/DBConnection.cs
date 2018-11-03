@@ -46,40 +46,53 @@ namespace Kodunikator
 		/// <summary>
 		/// Zwraca dla czego nie powiodła się rejestracja albo pustą pustą linijkę przy udanej rejestracji.
 		/// </summary>
-		public async void RegisterUserAsync(Label warningFeild, string name, string pass, string fb_mail, string fb_pass)
+		public async void RegisterUserAsync(RegisterForm registerForm, string name, string pass, string fb_mail, string fb_pass)
 		{
-			string checkQuery = string.Format("SELECT Name FROM Konta WHERE Name='{0}'", name);
-			var cmd4Check = new MySqlCommand(checkQuery, connection);
+			string checkQueryName = string.Format("SELECT Name FROM Konta WHERE Name='{0}'", name);
+			string checkQueryFb = string.Format("SELECT Name FROM Konta WHERE FB_mail='{0}'", fb_mail);
+			var cmd4CheckName = new MySqlCommand(checkQueryName, connection);
+			cmd4CheckName.CommandTimeout = 2;
+			var cmd4CheckFb = new MySqlCommand(checkQueryFb, connection);
+			cmd4CheckFb.CommandTimeout = 2;
 			List<string> tmp = new List<string>();
-			var reader = cmd4Check.ExecuteReader();
-			while (reader.Read())
+			var readerName = cmd4CheckName.ExecuteReader();
+			while (readerName.Read())
 			{
-				tmp.Add(reader.GetString(0));
+				tmp.Add(readerName.GetString(0));
 			}
-			reader.Close();
+			readerName.Close();
 			if(tmp.Count != 0)
 			{
-				warningFeild.Text = "User with this username already exists";
-				warningFeild.Visible = true;
-				Log.NewLog("User with this username already exists");
+				registerForm.ErrorMessage("User with this username already exists.");
+				return;
 			}
-			if(!await Facebook.LogIn(fb_mail, fb_pass))
+			tmp.Clear();
+			var readerFb = cmd4CheckFb.ExecuteReader();
+			while (readerFb.Read())
 			{
-				warningFeild.Text = "Facebook verification fail.";
-				warningFeild.Visible = true;
-				Log.NewLog("Facebook verification fail.");
+				tmp.Add(readerFb.GetString(0));
+			}
+			readerFb.Close();
+			if(tmp.Count != 0)
+			{
+				registerForm.ErrorMessage("User with this Facebook account already exists.");
+				return;
+			}
+			if (!await Facebook.LogIn(fb_mail, fb_pass))
+			{
+				registerForm.ErrorMessage("Facebook verification fail.");
+				return;
 			}
 			string query = string.Format("INSERT INTO Konta (Name, Password, FB_ID, Friends, FB_mail, FB_password) VALUES ('{0}', '{1}', NULL, NULL, '{2}', '{3}')", name, Encrypter.HashThePassword(pass), fb_mail, Encrypter.Encrypt(fb_pass, pass));
 			var cmd = new MySqlCommand(query, connection);
 			if (cmd.ExecuteNonQuery() != 0)
 			{
 				Facebook.LogOut();
-				Program.RegisterSuccess();
+				registerForm.BackToLog();
+				return;
 			}
 
-			warningFeild.Text = "Unknown registration error.";
-			warningFeild.Visible = true;
-			Log.NewLog("Unknown registration error.");
+			registerForm.ErrorMessage("Unknown registration error.");
 		}
 
 		public bool Login(string name, string pass)
@@ -87,6 +100,7 @@ namespace Kodunikator
 			string query = string.Format("SELECT FB_mail, FB_password FROM Konta WHERE Name='{0}' AND Password='{1}'", name, Encrypter.HashThePassword(pass));
 			var cmd = new MySqlCommand(query, connection);
 			var reader = cmd.ExecuteReader();
+			cmd.CommandTimeout = 2;
 			string fbMail = null, fbPass = null;
 			while (reader.Read())
 			{

@@ -37,11 +37,6 @@ namespace Kodunikator
 			mainForm.Show();      
 		}
 
-		public static void RegisterSuccess()
-		{
-			logForm.backToLog();
-		}
-
 
 		/// <summary>
 		/// Wylogowanie z aplikacji (żeby zalogować się na inne konto)
