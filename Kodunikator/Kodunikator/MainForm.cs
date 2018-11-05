@@ -15,6 +15,7 @@ namespace Kodunikator
 		public MainForm()
 		{
 			InitializeComponent();
+			main_username_sign.Text = Program.username;
 			ToolBar toolBar1 = new ToolBar();
 			ToolBarButton toolBarButton1 = new ToolBarButton();
 			ToolBarButton toolBarButton2 = new ToolBarButton();
@@ -38,6 +39,10 @@ namespace Kodunikator
 
 			// Add the ToolBar to the Form.
 			Controls.Add(toolBar1);
+
+			ListViewItem item = new ListViewItem("Aleks");
+			item.SubItems.Add("Hi");
+			conversation_view.Items.Add(item);
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)

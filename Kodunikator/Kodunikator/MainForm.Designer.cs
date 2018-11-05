@@ -29,20 +29,48 @@
 		private void InitializeComponent()
 		{
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.main_facebook_name_sign = new System.Windows.Forms.Label();
+			this.main_username_sign = new System.Windows.Forms.Label();
 			this.message_feild = new System.Windows.Forms.TextBox();
 			this.send_btn = new System.Windows.Forms.Button();
 			this.conversation_view = new System.Windows.Forms.ListView();
+			this.Username = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.Message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// panel1
 			// 
 			this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
 			this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panel1.Controls.Add(this.main_facebook_name_sign);
+			this.panel1.Controls.Add(this.main_username_sign);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(240, 450);
 			this.panel1.TabIndex = 0;
+			// 
+			// main_facebook_name_sign
+			// 
+			this.main_facebook_name_sign.AutoSize = true;
+			this.main_facebook_name_sign.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.main_facebook_name_sign.Location = new System.Drawing.Point(17, 46);
+			this.main_facebook_name_sign.Name = "main_facebook_name_sign";
+			this.main_facebook_name_sign.Size = new System.Drawing.Size(102, 16);
+			this.main_facebook_name_sign.TabIndex = 1;
+			this.main_facebook_name_sign.Text = "facebook name";
+			// 
+			// main_username_sign
+			// 
+			this.main_username_sign.AutoSize = true;
+			this.main_username_sign.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.main_username_sign.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+			this.main_username_sign.Location = new System.Drawing.Point(11, 11);
+			this.main_username_sign.Name = "main_username_sign";
+			this.main_username_sign.Size = new System.Drawing.Size(76, 31);
+			this.main_username_sign.TabIndex = 0;
+			this.main_username_sign.Text = "User";
 			// 
 			// message_feild
 			// 
@@ -71,11 +99,25 @@
 			this.conversation_view.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.conversation_view.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Username,
+            this.Message});
+			this.conversation_view.FullRowSelect = true;
+			this.conversation_view.GridLines = true;
 			this.conversation_view.Location = new System.Drawing.Point(246, 12);
 			this.conversation_view.Name = "conversation_view";
 			this.conversation_view.Size = new System.Drawing.Size(542, 396);
 			this.conversation_view.TabIndex = 3;
 			this.conversation_view.UseCompatibleStateImageBehavior = false;
+			this.conversation_view.View = System.Windows.Forms.View.List;
+			// 
+			// Username
+			// 
+			this.Username.Text = "Username";
+			// 
+			// Message
+			// 
+			this.Message.Text = "Message";
 			// 
 			// MainForm
 			// 
@@ -90,6 +132,8 @@
 			this.Name = "MainForm";
 			this.Text = "Kodunikator";
 			this.Load += new System.EventHandler(this.MainForm_Load);
+			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -101,5 +145,9 @@
 		private System.Windows.Forms.TextBox message_feild;
 		private System.Windows.Forms.Button send_btn;
 		private System.Windows.Forms.ListView conversation_view;
+		private System.Windows.Forms.Label main_facebook_name_sign;
+		private System.Windows.Forms.Label main_username_sign;
+		private System.Windows.Forms.ColumnHeader Username;
+		private System.Windows.Forms.ColumnHeader Message;
 	}
 }

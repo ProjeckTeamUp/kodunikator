@@ -117,6 +117,15 @@ namespace Kodunikator
             fb_client = null;
         }
 
+		public static string GetName()
+		{
+			if(fb_client != null)
+			{
+				//return name
+			}
+			return "";
+		}
+
         /// <summary>
         /// Wysyłanie wiadomości.
         /// </summary>

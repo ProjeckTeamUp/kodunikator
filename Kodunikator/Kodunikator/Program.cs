@@ -9,10 +9,10 @@ namespace Kodunikator
 {
     static class Program
     {
+		public static string username;
 
 		private static MainForm mainForm = null;
 		private static LogForm logForm = null;
-        private static FBLogin fbLogin = null;
 
         /// <summary>
         /// Główny punkt wejścia dla aplikacji.
@@ -23,18 +23,26 @@ namespace Kodunikator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 			logForm = new LogForm();
-			mainForm = new MainForm();
             Application.Run(logForm);
         }
 
 		/// <summary>
 		/// Odpalenie aplikacji po zalogowaniu
 		/// </summary>
-		public static void StartKodunikator()
+		public static void StartKodunikator(string errorMessage)
 		{
-			mainForm.FormClosing += delegate { logForm.Close(); };
-			logForm.Hide();
-			mainForm.Show();      
+			if(errorMessage.Length == 0)
+			{
+				mainForm = new MainForm();
+				logForm.SuccessLogin();
+				mainForm.FormClosing += delegate { logForm.Close(); };
+				logForm.Hide();
+				mainForm.Show();
+			}
+			else
+			{
+				logForm.UnseuccessLogin(errorMessage);
+			}
 		}
 
 

@@ -95,7 +95,7 @@ namespace Kodunikator
 			registerForm.ErrorMessage("Unknown registration error.");
 		}
 
-		public bool Login(string name, string pass)
+		public async void LoginAsync(string name, string pass)
 		{
 			string query = string.Format("SELECT FB_mail, FB_password FROM Konta WHERE Name='{0}' AND Password='{1}'", name, Encrypter.HashThePassword(pass));
 			var cmd = new MySqlCommand(query, connection);
@@ -110,10 +110,19 @@ namespace Kodunikator
 			reader.Close();
 			if (fbMail != null && fbPass != null)
 			{
-				//save facebook password or log in
-				return true;
+				if(await Facebook.LogIn(fbMail, Encrypter.Decrypt(fbPass, pass)))
+				{
+					Program.username = name;
+					Program.StartKodunikator("");
+				}
+				else
+				{
+					Program.StartKodunikator("Facebook login fail.");
+				}
+				return;
 			}
-			return false;
+			Program.StartKodunikator("Username or password is incorrect.");
+			return;
 		}
 
         /// <summary>

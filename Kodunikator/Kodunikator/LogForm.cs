@@ -35,6 +35,7 @@ namespace Kodunikator
 
         private void sign_btn_Click(object sender, EventArgs e)
         {
+			Cursor = Cursors.WaitCursor;
 			if (dbcon != null)
 			{
 				for(int i=0; i<5; i++)
@@ -49,33 +50,33 @@ namespace Kodunikator
 				}
 				if (dbcon.isConnected())
 				{
-					if (dbcon.Login(username_field.Text, password_field.Text))
-					{
-						Log.NewLog("Udane zalogowanie do konta kodunikatora.");
-						dbcon.Close();
-                        Program.StartKodunikator();
-					}
-					else
-					{
-						log_error_msg.Text = "Wrong user name or password";
-						log_error_msg.Visible = true;
-						Log.NewLog("Nieudana próba zalogowania do konta kodunikatora.");
-					}
+					dbcon.LoginAsync(username_field.Text, password_field.Text);
 				}
 				else
 				{
-					Log.NewError("Problem z połączeniem z bazą danych.");
-					log_error_msg.Text = "DataBase connection error.";
-					log_error_msg.Visible = true;
+					UnseuccessLogin("Problem z połączeniem z bazą danych.");
 				}
 			}
 			else
 			{
-				Log.NewError("Problem z połączeniem z bazą danych. Ponowna próba połączenia się.");
-				log_error_msg.Text = "DataBase connection error. Try again.";
-				log_error_msg.Visible = true;
+				UnseuccessLogin("DataBase connection error. Try again.");
 				ConnectToDatabase();
 			}
+		}
+
+		public void SuccessLogin()
+		{
+			Log.NewLog("Udane zalogowanie do konta kodunikatora.");
+			Cursor = Cursors.Arrow;
+			dbcon.Close();
+		}
+
+		public void UnseuccessLogin(string errorMessage)
+		{
+			log_error_msg.Text = errorMessage;
+			log_error_msg.Visible = true;
+			Cursor = Cursors.Arrow;
+			Log.NewLog(errorMessage);
 		}
 
 		private void register_btn_Click(object sender, EventArgs e)
