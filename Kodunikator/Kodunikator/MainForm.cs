@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,9 @@ namespace Kodunikator
 {
 	public partial class MainForm : Form
 	{
+
+		private IList messages;
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -39,15 +43,66 @@ namespace Kodunikator
 
 			// Add the ToolBar to the Form.
 			Controls.Add(toolBar1);
-
-			ListViewItem item = new ListViewItem("Aleks");
-			item.SubItems.Add("Hi");
-			conversation_view.Items.Add(item);
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 
+			// Here i will just make an example data source, to emulate the control you are trying to reproduce.
+			//messages = new List<Tuple<string, string>>();
+
+			//dataSet.Add(new Tuple<string, string>("5:30 PM - 6:00 PM", "11 avaliable rooms"));
+			//dataSet.Add(new Tuple<string, string>("6:00 PM - 6:30 PM", "12 available rooms"));
+
+			//conversation_view.DataSource = messages;
+		}
+
+		private void conversation_view_View_DrawItem(object sender, DrawItemEventArgs e)
+		{
+
+			if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+			{
+				e = new DrawItemEventArgs(e.Graphics, e.Font, e.Bounds,
+					e.Index, e.State ^ DrawItemState.Selected, e.ForeColor, SystemColors.Control);
+			}
+			
+			e.DrawBackground();
+			var dataItem = conversation_view.Items[e.Index] as Tuple<string, string>;
+			var nameFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
+			e.Graphics.DrawString(dataItem.Item1, nameFont, Brushes.Black, e.Bounds.Left + 3, e.Bounds.Top + 5);
+			var msgFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
+			e.Graphics.DrawString(dataItem.Item2, msgFont, Brushes.Black, e.Bounds.Left + 30, e.Bounds.Top + 18);
+
+			var linePen = new Pen(SystemBrushes.Control);
+			var lineStartPoint = new Point(e.Bounds.Left, e.Bounds.Height + e.Bounds.Top -1);
+			var lineEndPoint = new Point(e.Bounds.Width, e.Bounds.Height + e.Bounds.Top -1);
+
+			e.Graphics.DrawLine(linePen, lineStartPoint, lineEndPoint);
+		}
+
+		private void conversation_view_MeasureItem(object sender, MeasureItemEventArgs e)
+		{
+			e.ItemHeight = 20 * GetLinesNumber((Tuple<string, string>)conversation_view.Items[e.Index]);
+		}
+
+		private int GetLinesNumber(Tuple<string, string> text)
+		{
+			/*int count = 1;
+			int pos = 0;
+			while ((pos = text.IndexOf("\r\n", pos)) != -1) { count++; pos += 2; }
+			return count;*/
+			return 2;
+		}
+
+		private void conversation_view_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void send_btn_Click(object sender, EventArgs e)
+		{
+			conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
+			message_feild.Clear();
 		}
 	}
 }

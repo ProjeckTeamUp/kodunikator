@@ -33,9 +33,7 @@
 			this.main_username_sign = new System.Windows.Forms.Label();
 			this.message_feild = new System.Windows.Forms.TextBox();
 			this.send_btn = new System.Windows.Forms.Button();
-			this.conversation_view = new System.Windows.Forms.ListView();
-			this.Username = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.Message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.conversation_view = new System.Windows.Forms.ListBox();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -93,31 +91,22 @@
 			this.send_btn.TabIndex = 2;
 			this.send_btn.Text = "Send";
 			this.send_btn.UseVisualStyleBackColor = true;
+			this.send_btn.Click += new System.EventHandler(this.send_btn_Click);
 			// 
 			// conversation_view
 			// 
 			this.conversation_view.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.conversation_view.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.Username,
-            this.Message});
-			this.conversation_view.FullRowSelect = true;
-			this.conversation_view.GridLines = true;
+			this.conversation_view.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+			this.conversation_view.FormattingEnabled = true;
 			this.conversation_view.Location = new System.Drawing.Point(246, 12);
 			this.conversation_view.Name = "conversation_view";
-			this.conversation_view.Size = new System.Drawing.Size(542, 396);
-			this.conversation_view.TabIndex = 3;
-			this.conversation_view.UseCompatibleStateImageBehavior = false;
-			this.conversation_view.View = System.Windows.Forms.View.List;
-			// 
-			// Username
-			// 
-			this.Username.Text = "Username";
-			// 
-			// Message
-			// 
-			this.Message.Text = "Message";
+			this.conversation_view.Size = new System.Drawing.Size(542, 394);
+			this.conversation_view.TabIndex = 4;
+			this.conversation_view.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.conversation_view_View_DrawItem);
+			this.conversation_view.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.conversation_view_MeasureItem);
+			this.conversation_view.SelectedIndexChanged += new System.EventHandler(this.conversation_view_SelectedIndexChanged);
 			// 
 			// MainForm
 			// 
@@ -144,10 +133,8 @@
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.TextBox message_feild;
 		private System.Windows.Forms.Button send_btn;
-		private System.Windows.Forms.ListView conversation_view;
 		private System.Windows.Forms.Label main_facebook_name_sign;
 		private System.Windows.Forms.Label main_username_sign;
-		private System.Windows.Forms.ColumnHeader Username;
-		private System.Windows.Forms.ColumnHeader Message;
+		private System.Windows.Forms.ListBox conversation_view;
 	}
 }
