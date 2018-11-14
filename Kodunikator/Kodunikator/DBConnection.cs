@@ -113,15 +113,19 @@ namespace Kodunikator
 				if(await Facebook.LogIn(fbMail, Encrypter.Decrypt(fbPass, pass)))
 				{
 					Program.username = name;
-					Program.StartKodunikator("");
+                    List<Friend> tmp = LoadFriendList(name);
+                    if (tmp != null)
+                        Program.StartKodunikator(tmp);
+                    else
+                        Program.UnseuccessLogin("Unexpected error. Cannot load friend list.");
 				}
 				else
 				{
-					Program.StartKodunikator("Facebook login fail.");
+					Program.UnseuccessLogin("Facebook login fail.");
 				}
 				return;
 			}
-			Program.StartKodunikator("Username or password is incorrect.");
+			Program.UnseuccessLogin("Username or password is incorrect.");
 			return;
 		}
 
@@ -132,7 +136,7 @@ namespace Kodunikator
         {
             List<Friend> friendList = new List<Friend>();
 
-            // TODO // tworzenie listy znajomych na podstawie bazy danych
+            string query = string.Format("SELECT Friends FROM Konta WHERE Name='{0}'", Program.username);
 
             return friendList;
         }
