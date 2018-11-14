@@ -136,9 +136,17 @@ namespace Kodunikator
         {
             List<Friend> friendList = new List<Friend>();
 
-            string query = string.Format("SELECT Friends FROM Konta WHERE Name='{0}'", Program.username);
+			string query = string.Format("SELECT Name, FB_ID FROM Konta WHERE Name <> '{0}'", Program.username);
+			var cmd = new MySqlCommand(query, connection);
+			var reader = cmd.ExecuteReader();
+			cmd.CommandTimeout = 2;
+			while (reader.Read())
+			{
+				friendList.Add(new Friend(reader.GetString("Name"), reader.GetString("FB_ID")));
+			}
+			reader.Close();
 
-            return friendList;
+			return friendList;
         }
     }
 }

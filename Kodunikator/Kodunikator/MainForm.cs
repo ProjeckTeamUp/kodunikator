@@ -49,12 +49,19 @@ namespace Kodunikator
 			Controls.Add(toolBar1);
 
             friends = _friends;
-            currentFriend = new Friend("Aleks", "100004033446947"); // DEL
         }
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			friends_list.Items.Add("test");
+			foreach(Friend x in friends)
+			{
+				friends_list.Items.Add(x.nickname);
+			}
+			if (friends.Count != 0)
+			{
+				currentFriend = friends[0];
+				friends_list.SelectedIndex = 0;
+			}
 		}
 
         #region Interface
@@ -99,6 +106,12 @@ namespace Kodunikator
 			{
 				e = new DrawItemEventArgs(e.Graphics, e.Font, e.Bounds,
 					e.Index, e.State ^ DrawItemState.Selected, e.ForeColor, SystemColors.ControlDark);
+				if (!friends[e.Index].Equals(currentFriend))
+				{
+					message_feild.Clear();
+					conversation_view.Items.Clear();
+					currentFriend = friends[e.Index];
+				}
 			}
 
 			e.DrawBackground();
@@ -129,7 +142,7 @@ namespace Kodunikator
 			else if (message_feild.Text != "") //TODO: nie wysyłać pustych akapitów
 			{
 				conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
-        Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
+				Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
 				message_feild.Clear();
 			}
 		}
