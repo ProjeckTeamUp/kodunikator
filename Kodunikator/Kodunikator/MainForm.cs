@@ -13,10 +13,14 @@ namespace Kodunikator
 {
 	public partial class MainForm : Form
 	{
-
 		private IList messages;
 
-		public MainForm()
+        private List<Friend> friends; // Lista przyjaciół i ich danych
+        private Friend currentFriend = null; // Aktualnie wybrany przyjaciel
+
+        public MainForm() { }
+
+		public MainForm(List<Friend> _friends)
 		{
 			InitializeComponent();
 			main_username_sign.Text = Program.username;
@@ -43,14 +47,18 @@ namespace Kodunikator
 
 			// Add the ToolBar to the Form.
 			Controls.Add(toolBar1);
-		}
+
+            friends = _friends;
+        }
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 			friends_list.Items.Add("test");
 		}
 
-		private void conversation_view_View_DrawItem(object sender, DrawItemEventArgs e)
+        #region Interface
+
+        private void conversation_view_View_DrawItem(object sender, DrawItemEventArgs e)
 		{
 
 			if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
@@ -123,5 +131,9 @@ namespace Kodunikator
 				message_feild.Clear();
 			}
 		}
-	}
+
+        #endregion
+
+
+    }
 }

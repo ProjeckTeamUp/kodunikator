@@ -29,27 +29,28 @@ namespace Kodunikator
 		/// <summary>
 		/// Odpalenie aplikacji po zalogowaniu
 		/// </summary>
-		public static void StartKodunikator(string errorMessage)
+		public static void StartKodunikator(List<Friend> friends)
 		{
-			if(errorMessage.Length == 0)
-			{
-				mainForm = new MainForm();
-				logForm.SuccessLogin();
-				mainForm.FormClosing += delegate { logForm.Close(); };
-				logForm.Hide();
-				mainForm.Show();
-			}
-			else
-			{
-				logForm.UnseuccessLogin(errorMessage);
-			}
+		    mainForm = new MainForm(friends);
+			logForm.SuccessLogin();
+			mainForm.FormClosing += delegate { logForm.Close(); };
+			logForm.Hide();
+			mainForm.Show();
 		}
 
+        /// <summary>
+        /// Nieudane zalogowanie do aplikacji
+        /// </summary>
+        /// <param name="errorMessage"></param>
+        public static void UnseuccessLogin(string errorMessage)
+        {
+            logForm.UnseuccessLogin(errorMessage);
+        }
 
-		/// <summary>
-		/// Wylogowanie z aplikacji (żeby zalogować się na inne konto)
-		/// </summary>
-		public static void LogOut()
+        /// <summary>
+        /// Wylogowanie z aplikacji (żeby zalogować się na inne konto)
+        /// </summary>
+        public static void LogOut()
 		{
 			logForm.Location = mainForm.Location;
 			logForm.StartPosition = FormStartPosition.Manual;

@@ -44,7 +44,7 @@ namespace Kodunikator
 		public bool isConnected() { return connected; }
 
 		/// <summary>
-		/// Zwraca dla czego nie powiodła się rejestracja albo pustą pustą linijkę przy udanej rejestracji.
+		/// Zwraca dlaczego nie powiodła się rejestracja albo pustą pustą linijkę przy udanej rejestracji.
 		/// </summary>
 		public async void RegisterUserAsync(RegisterForm registerForm, string name, string pass, string fb_mail, string fb_pass)
 		{
@@ -83,7 +83,7 @@ namespace Kodunikator
 				registerForm.ErrorMessage("Facebook verification fail.");
 				return;
 			}
-			string query = string.Format("INSERT INTO Konta (Name, Password, FB_ID, Friends, FB_mail, FB_password) VALUES ('{0}', '{1}', NULL, NULL, '{2}', '{3}')", name, Encrypter.HashThePassword(pass), fb_mail, Encrypter.Encrypt(fb_pass, pass));
+			string query = string.Format("INSERT INTO Konta (Name, Password, FB_ID, Friends, FB_mail, FB_password) VALUES ('{0}', '{1}', '{4}', NULL, '{2}', '{3}')", name, Encrypter.HashThePassword(pass), fb_mail, Encrypter.Encrypt(fb_pass, pass), Facebook.GetFacebookID());
 			var cmd = new MySqlCommand(query, connection);
 			if (cmd.ExecuteNonQuery() != 0)
 			{
@@ -113,15 +113,19 @@ namespace Kodunikator
 				if(await Facebook.LogIn(fbMail, Encrypter.Decrypt(fbPass, pass)))
 				{
 					Program.username = name;
-					Program.StartKodunikator("");
+                    List<Friend> tmp = LoadFriendList(name);
+                    if (tmp != null)
+                        Program.StartKodunikator(tmp);
+                    else
+                        Program.UnseuccessLogin("Unexpected error. Cannot load friend list.");
 				}
 				else
 				{
-					Program.StartKodunikator("Facebook login fail.");
+					Program.UnseuccessLogin("Facebook login fail.");
 				}
 				return;
 			}
-			Program.StartKodunikator("Username or password is incorrect.");
+			Program.UnseuccessLogin("Username or password is incorrect.");
 			return;
 		}
 
@@ -132,7 +136,7 @@ namespace Kodunikator
         {
             List<Friend> friendList = new List<Friend>();
 
-            // TODO // tworzenie listy znajomych na podstawie bazy danych
+            string query = string.Format("SELECT Friends FROM Konta WHERE Name='{0}'", Program.username);
 
             return friendList;
         }

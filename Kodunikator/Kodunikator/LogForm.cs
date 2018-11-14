@@ -76,7 +76,7 @@ namespace Kodunikator
 			log_error_msg.Text = errorMessage;
 			log_error_msg.Visible = true;
 			Cursor = Cursors.Arrow;
-			Log.NewLog(errorMessage);
+			Log.NewError(errorMessage);
 		}
 
 		private void register_btn_Click(object sender, EventArgs e)

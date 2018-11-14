@@ -24,7 +24,7 @@ namespace Kodunikator
 			Cursor = Cursors.Arrow;
 			reg_error_msg.Text = msg;
 			reg_error_msg.Visible = true;
-			Log.NewLog(msg);
+			Log.NewError(msg);
 		}
 
 		public void BackToLog()
