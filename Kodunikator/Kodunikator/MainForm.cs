@@ -32,9 +32,9 @@ namespace Kodunikator
 			//TODO: toolbar rozciągniety w wysokości
 
 			// Set the Text properties of the ToolBarButton controls.
-			toolBarButton1.Text = "Tu";
-			toolBarButton2.Text = "Będą";
-			toolBarButton3.Text = "Przyciski";
+			toolBarButton1.Text = "Przycisk1";
+			toolBarButton2.Text = "Znajomi";
+			toolBarButton3.Text = "Przycisk2";
 
 			// Add the ToolBarButton controls to the ToolBar.
 			toolBar1.Buttons.Add(toolBarButton1);
@@ -142,11 +142,7 @@ namespace Kodunikator
 			else if (message_feild.Text != "") //TODO: nie wysyłać pustych akapitów
 			{
 				conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
-<<<<<<< HEAD
                 Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
-=======
-				Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
->>>>>>> master
 				message_feild.Clear();
 			}
 		}
