@@ -54,14 +54,7 @@ namespace Kodunikator
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-
-			// Here i will just make an example data source, to emulate the control you are trying to reproduce.
-			//messages = new List<Tuple<string, string>>();
-
-			//dataSet.Add(new Tuple<string, string>("5:30 PM - 6:00 PM", "11 avaliable rooms"));
-			//dataSet.Add(new Tuple<string, string>("6:00 PM - 6:30 PM", "12 available rooms"));
-
-			//conversation_view.DataSource = messages;
+			friends_list.Items.Add("test");
 		}
 
         #region Interface
@@ -94,13 +87,32 @@ namespace Kodunikator
 			e.ItemHeight = 20 * GetLinesNumber((Tuple<string, string>)conversation_view.Items[e.Index]);
 		}
 
+
+		private void friends_list_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			
+		}
+
+		private void friends_list_View_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+			{
+				e = new DrawItemEventArgs(e.Graphics, e.Font, e.Bounds,
+					e.Index, e.State ^ DrawItemState.Selected, e.ForeColor, SystemColors.ControlDark);
+			}
+
+			e.DrawBackground();
+			var dataItem = friends_list.Items[e.Index] as string;
+			var nameFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
+			e.Graphics.DrawString(dataItem, nameFont, Brushes.Black, e.Bounds.Left + 3, e.Bounds.Top + 3);
+		}
+
 		private int GetLinesNumber(Tuple<string, string> text)
 		{
-			/*int count = 1;
+			int count = 1;
 			int pos = 0;
-			while ((pos = text.IndexOf("\r\n", pos)) != -1) { count++; pos += 2; }
-			return count;*/
-			return 2;
+			while ((pos = text.Item2.IndexOf("\r\n", pos)) != -1) { count++; pos += 2; }
+			return 1 + count;
 		}
 
 		private void conversation_view_SelectedIndexChanged(object sender, EventArgs e)
@@ -110,9 +122,16 @@ namespace Kodunikator
 
 		private void send_btn_Click(object sender, EventArgs e)
 		{
-			conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
-            Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
-            message_feild.Clear();
+			if (Control.ModifierKeys == Keys.Shift)
+			{
+				message_feild.AppendText(Environment.NewLine);
+			}
+			else if (message_feild.Text != "") //TODO: nie wysyłać pustych akapitów
+			{
+				conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
+        Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
+				message_feild.Clear();
+			}
 		}
 
         #endregion

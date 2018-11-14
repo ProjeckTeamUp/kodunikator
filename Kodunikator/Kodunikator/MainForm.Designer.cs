@@ -1,4 +1,7 @@
-﻿namespace Kodunikator
+﻿using System;
+using System.Windows.Forms;
+
+namespace Kodunikator
 {
 	partial class MainForm
 	{
@@ -28,26 +31,28 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.panel1 = new System.Windows.Forms.Panel();
+			this.panel = new System.Windows.Forms.Panel();
 			this.main_facebook_name_sign = new System.Windows.Forms.Label();
 			this.main_username_sign = new System.Windows.Forms.Label();
 			this.message_feild = new System.Windows.Forms.TextBox();
 			this.send_btn = new System.Windows.Forms.Button();
 			this.conversation_view = new System.Windows.Forms.ListBox();
-			this.panel1.SuspendLayout();
+			this.friends_list = new System.Windows.Forms.ListBox();
+			this.panel.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// panel1
+			// panel
 			// 
-			this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.panel1.Controls.Add(this.main_facebook_name_sign);
-			this.panel1.Controls.Add(this.main_username_sign);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-			this.panel1.Location = new System.Drawing.Point(0, 0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(240, 450);
-			this.panel1.TabIndex = 0;
+			this.panel.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+			this.panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panel.Controls.Add(this.friends_list);
+			this.panel.Controls.Add(this.main_facebook_name_sign);
+			this.panel.Controls.Add(this.main_username_sign);
+			this.panel.Dock = System.Windows.Forms.DockStyle.Left;
+			this.panel.Location = new System.Drawing.Point(0, 0);
+			this.panel.Name = "panel";
+			this.panel.Size = new System.Drawing.Size(240, 450);
+			this.panel.TabIndex = 0;
 			// 
 			// main_facebook_name_sign
 			// 
@@ -108,6 +113,21 @@
 			this.conversation_view.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.conversation_view_MeasureItem);
 			this.conversation_view.SelectedIndexChanged += new System.EventHandler(this.conversation_view_SelectedIndexChanged);
 			// 
+			// friends_list
+			// 
+			this.friends_list.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+			this.friends_list.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+			this.friends_list.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.friends_list.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.friends_list.ItemHeight = 20;
+			this.friends_list.FormattingEnabled = true;
+			this.friends_list.Location = new System.Drawing.Point(11, 81);
+			this.friends_list.Name = "friends_list";
+			this.friends_list.Size = new System.Drawing.Size(215, 351);
+			this.friends_list.TabIndex = 2;
+			this.friends_list.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.friends_list_View_DrawItem);
+			this.friends_list.SelectedIndexChanged += new System.EventHandler(this.friends_list_SelectedIndexChanged);
+			// 
 			// MainForm
 			// 
 			this.AcceptButton = this.send_btn;
@@ -117,12 +137,12 @@
 			this.Controls.Add(this.conversation_view);
 			this.Controls.Add(this.send_btn);
 			this.Controls.Add(this.message_feild);
-			this.Controls.Add(this.panel1);
+			this.Controls.Add(this.panel);
 			this.Name = "MainForm";
 			this.Text = "Kodunikator";
 			this.Load += new System.EventHandler(this.MainForm_Load);
-			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
+			this.panel.ResumeLayout(false);
+			this.panel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -130,11 +150,12 @@
 
 		#endregion
 
-		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Panel panel;
 		private System.Windows.Forms.TextBox message_feild;
 		private System.Windows.Forms.Button send_btn;
 		private System.Windows.Forms.Label main_facebook_name_sign;
 		private System.Windows.Forms.Label main_username_sign;
 		private System.Windows.Forms.ListBox conversation_view;
+		private System.Windows.Forms.ListBox friends_list;
 	}
 }
