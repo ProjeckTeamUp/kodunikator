@@ -44,6 +44,7 @@ namespace Kodunikator
             if (logged_in)
             {
                 Log.NewLog("Poprawnie zalogowano do kota facebook.");
+                Log.NewLog(GetFacebookID());
                 return true;
             }
             else
@@ -51,6 +52,14 @@ namespace Kodunikator
                 Log.NewError("Błąd logowania do konta facebook.");
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Zwraca FB ID aktualnie zalogowanego konta
+        /// </summary>
+        public static string GetFacebookID()
+        {           
+            return fb_client.GetUserUid();
         }
 
         /// <summary>
@@ -66,11 +75,14 @@ namespace Kodunikator
             fb_client = null;
         }
 
+        /// <summary>
+        /// Zwraca imię i nazwisko z konta facebook
+        /// </summary>
 		public static string GetName()
 		{
 			if(fb_client != null)
 			{
-				//return name
+                // return ...
 			}
 			return "";
 		}
