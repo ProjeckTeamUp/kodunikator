@@ -148,5 +148,34 @@ namespace Kodunikator
 
 			return friendList;
         }
+
+        /// <summary>
+        /// Sprawdza czy istnieje dana osoba w bazie danych
+        /// </summary>
+        public bool FindPerson(string name)
+        {
+            string query = string.Format("SELECT Name FROM Konta WHERE Name='{0}'", name);
+            var cmd = new MySqlCommand(query, connection);
+            var reader = cmd.ExecuteReader();
+            List<string> tmp = new List<string>();
+            while (reader.Read())
+            {
+                tmp.Add(reader.GetString(0));
+            }
+
+            return tmp.Count > 0 ? true : false;
+        }
+
+        /// <summary>
+        /// Dodaje nowego przyjaciela
+        /// </summary>
+        public void AddFriend(string name)
+        {
+            string newFriendList = name;
+            string query = string.Format("INSERT INTO Konta.Friends WHERE Name = '{0}' Value '{1}'", Program.username, newFriendList);
+            var cmd = new MySqlCommand(query, connection);
+            LoadFriendList(Program.username);
+        }
     }
+
 }
