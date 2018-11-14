@@ -129,7 +129,7 @@ namespace Kodunikator
 			else if (message_feild.Text != "") //TODO: nie wysyłać pustych akapitów
 			{
 				conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
-        Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
+                Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
 				message_feild.Clear();
 			}
 		}
