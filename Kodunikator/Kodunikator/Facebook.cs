@@ -34,62 +34,11 @@ namespace Kodunikator
             }
         } static FBClient fb_client; // Klient konta użytkownika na facebooku
 
-        private const string loginFile = "fbLogin.txt"; // Nazwa pliku z danymi do logowania do facebooka.
-
-        /// <summary>
-        /// Zapisuje hasło i adres email do konta facebook w pliku.
-        /// </summary>
-        /// <param name="mail"> Adres email konta facebook. </param>
-        /// <param name="password"> Hasło do konta facebook. </param>
-        public static void SaveMailPassword(string mail, string password)
-        {
-            using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter(loginFile, true))
-            {
-                file.WriteLine(mail);
-                file.WriteLine(password);
-            }
-        }
-
-        /// <summary>
-        /// Wczytuje wartość adresu email i hasła do konta facebook z pliku. Login i hasło zwraca w formie tablicy 'string'.
-        /// </summary>
-        public static string[] ReadMailPassword()
-        {
-            string[] tmp = new string[3];
-            using (System.IO.StreamReader file =
-            new System.IO.StreamReader(loginFile))
-            {
-                tmp[0] = file.ReadLine();
-                tmp[1] = file.ReadLine();
-                tmp[2] = file.ReadLine();
-            }
-
-            return tmp;
-        }
-
-        /// <summary>
-        /// Określa czy są zapisane dane do stałego logowania do konta facebook. Zwraca 'true' jeśli tak.
-        /// </summary>
-        public static bool IsPermamentLogin()
-        {
-            if (System.IO.File.Exists(loginFile))
-                return true;
-            return false;
-        }
-
         /// <summary>
         /// Logowanie do konta facebook. Zwraca 'true' dla udanego logowania.
         /// </summary>
-        public static async Task<bool> LogIn(string mail = null, string password = null)
+        public static async Task<bool> LogIn(string mail, string password)
         {
-            if(mail == null || password == null)
-            {
-                string[] tmp = ReadMailPassword();
-                mail = tmp[0];
-                password = tmp[1];
-            }
-
             fb_client = new FBClient();
             var logged_in = await fb_client.DoLogin(mail, password);
             if (logged_in)
@@ -131,9 +80,15 @@ namespace Kodunikator
         /// </summary>
         /// <param name="text"> Tekst wiadomości. </param>
         /// <param name="id"> ID konta facebook odbiorcy wiadomości. </param>
-        public static async Task SendMessage(string text, string id)
+        /// <param name="type"> 0 - klasyczna wiadomośc tekstowa. 1 - wiadomość w postaci kodu źródłowego. </param>
+        public static async Task SendMessage(string text, string id, int type=0)
         {
-            var msg_uid = await fb_client.SendMessage(text, thread_id: id);
+            string message = "#Koduniaktor\n";
+            if (type == 1)
+                message += "#Code";
+            message += text;
+
+            var msg_uid = await fb_client.SendMessage(message, thread_id: id);
         }
     }
 }
