@@ -49,6 +49,7 @@ namespace Kodunikator
 			Controls.Add(toolBar1);
 
             friends = _friends;
+            currentFriend = new Friend("Aleks", "100004033446947"); // DEL
         }
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -110,7 +111,8 @@ namespace Kodunikator
 		private void send_btn_Click(object sender, EventArgs e)
 		{
 			conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
-			message_feild.Clear();
+            Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
+            message_feild.Clear();
 		}
 
         #endregion
