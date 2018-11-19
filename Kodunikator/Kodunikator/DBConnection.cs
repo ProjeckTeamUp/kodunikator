@@ -83,7 +83,7 @@ namespace Kodunikator
 				registerForm.ErrorMessage("Facebook verification fail.");
 				return;
 			}
-			string query = string.Format("INSERT INTO Konta (Name, Password, FB_ID, Friends, FB_mail, FB_password) VALUES ('{0}', '{1}', '{4}', NULL, '{2}', '{3}')", name, Encrypter.HashThePassword(pass), fb_mail, Encrypter.Encrypt(fb_pass, pass), Facebook.GetFacebookID());
+			string query = string.Format("INSERT INTO Konta (Name, Password, FB_ID, Friends, FB_mail, FB_password) VALUES ('{0}', '{1}', '{4}', '', '{2}', '{3}')", name, Encrypter.HashThePassword(pass), fb_mail, Encrypter.Encrypt(fb_pass, pass), Facebook.GetFacebookID());
 			var cmd = new MySqlCommand(query, connection);
 			if (cmd.ExecuteNonQuery() != 0)
 			{
@@ -136,17 +136,75 @@ namespace Kodunikator
         {
             List<Friend> friendList = new List<Friend>();
 
-			string query = string.Format("SELECT Name, FB_ID FROM Konta WHERE Name <> '{0}'", Program.username);
-			var cmd = new MySqlCommand(query, connection);
-			var reader = cmd.ExecuteReader();
-			cmd.CommandTimeout = 2;
-			while (reader.Read())
-			{
-				friendList.Add(new Friend(reader.GetString("Name"), reader.GetString("FB_ID")));
-			}
-			reader.Close();
+            string query = string.Format("SELECT Friends FROM Konta WHERE Name='{0}'", Program.username);
+            var cmd = new MySqlCommand(query, connection);
+            var reader = cmd.ExecuteReader();
+            cmd.CommandTimeout = 2;
+            reader.Read();
+            string tmpFriends = reader.GetString(0);
+            string[] friendsNames = tmpFriends.Split('|');
+            if(friendsNames[0]!="")
+            for(int i=0; i<friendsNames.Length; i++)
+            {
+                reader.Close();
+                string query2 = string.Format("SELECT FB_ID FROM Konta WHERE Name='{0}'", friendsNames[i]);
+                var cmd2 = new MySqlCommand(query2, connection);
+                reader = cmd2.ExecuteReader();
+                reader.Read();
+                friendList.Add(new Friend(friendsNames[i], reader.GetString(0)));
+            }
+            reader.Close();
+            return friendList;
+        }
 
-			return friendList;
+        /// <summary>
+        /// Sprawdza czy istnieje dana osoba w bazie danych
+        /// </summary>
+        public bool FindPerson(string name)
+        {
+            string query = string.Format("SELECT Name FROM Konta WHERE Name='{0}'", name);
+            var cmd = new MySqlCommand(query, connection);
+            var reader = cmd.ExecuteReader();
+            List<string> tmp = new List<string>();
+            while (reader.Read())
+            {
+                tmp.Add(reader.GetString(0));
+            }
+            reader.Close();
+
+            return tmp.Count > 0 ? true : false;
+        }
+
+        /// <summary>
+        /// Dodaje nowego przyjaciela
+        /// </summary>
+        public void AddFriend(string name)
+        {
+            string newFriendList;
+            string query = string.Format("SELECT Friends FROM Konta WHERE Name='{0}'", Program.username);
+            var cmd = new MySqlCommand(query, connection);
+            var reader = cmd.ExecuteReader();
+            reader.Read();
+            newFriendList = reader.GetString(0);
+            if (newFriendList == null || newFriendList == "")
+                newFriendList = name;
+            else
+            {
+                newFriendList += "|";
+                newFriendList += name;
+            }
+
+            reader.Close();
+            string query2 = string.Format("UPDATE Konta SET Friends='{0}' WHERE Name='{1}'", newFriendList, Program.username);
+            Log.NewLog(query2);
+            var cmd2 = new MySqlCommand(query2, connection);
+            if (cmd2.ExecuteNonQuery() != 0)
+            {
+                Log.NewLog("Zaktualizowanie listy przyjaciol. Nazwa: " + newFriendList);
+            }
+            
+            LoadFriendList(Program.username);
         }
     }
+
 }

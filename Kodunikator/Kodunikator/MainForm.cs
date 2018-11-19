@@ -18,13 +18,15 @@ namespace Kodunikator
         private List<Friend> friends; // Lista przyjaciół i ich danych
         private Friend currentFriend = null; // Aktualnie wybrany przyjaciel
 
+        ToolBar toolBar1;
+
         public MainForm() { }
 
 		public MainForm(List<Friend> _friends)
 		{
 			InitializeComponent();
 			main_username_sign.Text = Program.username;
-			ToolBar toolBar1 = new ToolBar();
+			toolBar1 = new ToolBar();
 			ToolBarButton toolBarButton1 = new ToolBarButton();
 			ToolBarButton toolBarButton2 = new ToolBarButton();
 			ToolBarButton toolBarButton3 = new ToolBarButton();
@@ -32,9 +34,9 @@ namespace Kodunikator
 			//TODO: toolbar rozciągniety w wysokości
 
 			// Set the Text properties of the ToolBarButton controls.
-			toolBarButton1.Text = "Tu";
-			toolBarButton2.Text = "Będą";
-			toolBarButton3.Text = "Przyciski";
+			toolBarButton1.Text = "Przycisk1";
+			toolBarButton2.Text = "Friends";
+			toolBarButton3.Text = "Przycisk2";
 
 			// Add the ToolBarButton controls to the ToolBar.
 			toolBar1.Buttons.Add(toolBarButton1);
@@ -42,8 +44,8 @@ namespace Kodunikator
 			toolBar1.Buttons.Add(toolBarButton3);
 
 			// Add the event-handler delegate.
-			/*toolBar1.ButtonClick += new ToolBarButtonClickEventHandler(
-			   this.toolBar1_ButtonClick);*/
+			toolBar1.ButtonClick += new ToolBarButtonClickEventHandler(
+			   this.toolBar1_ButtonClick);
 
 			// Add the ToolBar to the Form.
 			Controls.Add(toolBar1);
@@ -51,7 +53,22 @@ namespace Kodunikator
             friends = _friends;
         }
 
-		private void MainForm_Load(object sender, EventArgs e)
+        private void toolBar1_ButtonClick(Object sender, ToolBarButtonClickEventArgs e)
+        {
+            // Evaluate the Button property to determine which button was clicked.
+            switch (toolBar1.Buttons.IndexOf(e.Button))
+            {
+                case 0:
+                    break;
+                case 1:
+                    OpenAddFriendForm();
+                    break;
+                case 2:  
+                    break;
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
 		{
 			foreach(Friend x in friends)
 			{
@@ -115,9 +132,12 @@ namespace Kodunikator
 			}
 
 			e.DrawBackground();
-			var dataItem = friends_list.Items[e.Index] as string;
-			var nameFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
-			e.Graphics.DrawString(dataItem, nameFont, Brushes.Black, e.Bounds.Left + 3, e.Bounds.Top + 3);
+            if (friends.Count > 0)
+            {
+                var dataItem = friends_list.Items[e.Index] as string;
+                var nameFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
+                e.Graphics.DrawString(dataItem, nameFont, Brushes.Black, e.Bounds.Left + 3, e.Bounds.Top + 3);
+            }
 		}
 
 		private int GetLinesNumber(Tuple<string, string> text)
@@ -142,10 +162,16 @@ namespace Kodunikator
 			else if (message_feild.Text != "") //TODO: nie wysyłać pustych akapitów
 			{
 				conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
-				Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
+                Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
 				message_feild.Clear();
 			}
 		}
+
+        private void OpenAddFriendForm()
+        {
+            AddFriend addFriend = new AddFriend();
+            addFriend.Show();
+        }
 
         #endregion
 
