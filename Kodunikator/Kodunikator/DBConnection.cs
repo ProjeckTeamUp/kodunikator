@@ -202,6 +202,9 @@ namespace Kodunikator
 			return toReturn;
         }
 
+		/// <summary>
+		/// Usuwa przyjaciela
+		/// </summary>
 		public void deleteFriend(List<Friend> friendsList)
 		{
 			string newFriendList = "";

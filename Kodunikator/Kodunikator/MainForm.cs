@@ -183,6 +183,9 @@ namespace Kodunikator
             }
 		}
 
+		/// <summary>
+		/// Liczy w zwraca ilość linijek w wiadomości
+		/// </summary>
 		private int GetLinesNumber(Tuple<string, string> text)
 		{
 			int count = 1;
@@ -201,6 +204,9 @@ namespace Kodunikator
 
 		}
 
+		/// <summary>
+		/// Wysyła wiadomość
+		/// </summary>
 		private void send_btn_Click(object sender, EventArgs e)
 		{
 			if (Control.ModifierKeys == Keys.Shift)
@@ -221,6 +227,9 @@ namespace Kodunikator
             addFriend.Show();
         }
 
+		/// <summary>
+		/// Zaznacza znajomego w widoku, i ładuje rozmowę z nim (TODO)
+		/// </summary>
 		private void selectFriend(int index)
 		{
 			if (!friends[index].Equals(currentFriend))
@@ -232,6 +241,10 @@ namespace Kodunikator
 			}
 		}
 
+		/// <summary>
+		/// Dodaje nowego przyjaciela do widoku.
+		/// Wywoływane z AddFriend form.
+		/// </summary>
 		public void AddFriendFormResult(List<Friend> _friends)
 		{
 			friends = _friends;
@@ -247,6 +260,9 @@ namespace Kodunikator
 			friends_list.SelectedIndex = friends.Count - 1;
 		}
 
+		/// <summary>
+		/// Ładuje nową wiadomość do widoku
+		/// </summary>
 		public void messageArrived(FB_Message msg)
 		{
 			if (!msg.is_from_me)
