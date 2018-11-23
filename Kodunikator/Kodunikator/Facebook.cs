@@ -34,10 +34,14 @@ namespace Kodunikator
             }
         } static FBClient fb_client; // Klient konta użytkownika na facebooku
 
-        /// <summary>
-        /// Logowanie do konta facebook. Zwraca 'true' dla udanego logowania.
-        /// </summary>
-        public static async Task<bool> LogIn(string mail, string password)
+		private static FbMessageListener messageListener;
+
+		internal static FbMessageListener MessageListener { set => messageListener = value; }
+
+		/// <summary>
+		/// Logowanie do konta facebook. Zwraca 'true' dla udanego logowania.
+		/// </summary>
+		public static async Task<bool> LogIn(string mail, string password)
         {
             fb_client = new FBClient();
             var logged_in = await fb_client.DoLogin(mail, password);
@@ -45,6 +49,8 @@ namespace Kodunikator
             {
                 Log.NewLog("Poprawnie zalogowano do kota facebook.");
                 Log.NewLog(GetFacebookID());
+				fb_client.StartListening();
+				fb_client.UpdateEvent += Fb_client_UpdateEvent;
                 return true;
             }
             else
@@ -53,6 +59,15 @@ namespace Kodunikator
                 return false;
             }
         }
+
+		/// <summary>
+		/// Dostaje nową wiadomość i przesyła ją do listenera
+		/// </summary>
+		private static void Fb_client_UpdateEvent(object sender, UpdateEventArgs e)
+		{
+			if (messageListener != null)
+				messageListener.messageArrived((FB_Message)e.Payload);
+		}
 
         /// <summary>
         /// Zwraca FB ID aktualnie zalogowanego konta
@@ -69,6 +84,7 @@ namespace Kodunikator
         {
             if (fb_client != null)
             {
+				fb_client.StopListening();
                 fb_client.DoLogout();
                 Log.NewLog("Wylogowano z konta facebook.");
             }
@@ -99,7 +115,6 @@ namespace Kodunikator
             if (type == 1)
                 message += "#Code";
             message += text;
-
             var msg_uid = await fb_client.SendMessage(message, thread_id: id);
         }
     }

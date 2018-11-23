@@ -165,20 +165,68 @@ namespace Kodunikator
             string query = string.Format("SELECT Name FROM Konta WHERE Name='{0}'", name);
             var cmd = new MySqlCommand(query, connection);
             var reader = cmd.ExecuteReader();
-            List<string> tmp = new List<string>();
+			cmd.CommandTimeout = 2;
+			List<string> tmp = new List<string>();
             while (reader.Read())
             {
                 tmp.Add(reader.GetString(0));
             }
             reader.Close();
 
-            return tmp.Count > 0 ? true : false;
+			if (tmp.Count == 0)
+				return false;
+
+			string FriendList;
+			string query2 = string.Format("SELECT Friends FROM Konta WHERE Name='{0}'", Program.username);
+            var cmd2 = new MySqlCommand(query2, connection);
+            var reader2 = cmd2.ExecuteReader();
+			cmd.CommandTimeout = 2;
+			reader2.Read();
+            FriendList = reader2.GetString(0);
+			bool toReturn = true;
+			if (FriendList == null || FriendList == "")
+				toReturn = true;
+			else
+			{
+				foreach(string s in FriendList.Split('|')) {
+					if (s.Equals(name))
+					{
+						toReturn = false;
+						break;
+					}
+				}
+			}
+
+			reader2.Close();
+
+			return toReturn;
         }
+
+		public void deleteFriend(List<Friend> friendsList)
+		{
+			string newFriendList = "";
+			if (friendsList.Count > 0)
+			{
+				newFriendList = friendsList[0].nickname;
+				for (int i = 1; i < friendsList.Count; i++)
+				{
+					newFriendList += "|" + friendsList[i].nickname;
+				}
+			}
+
+			string query = string.Format("UPDATE Konta SET Friends='{0}' WHERE Name='{1}'", newFriendList, Program.username);
+			Log.NewLog(query);
+			var cmd = new MySqlCommand(query, connection);
+			if (cmd.ExecuteNonQuery() != 0)
+			{
+				Log.NewLog("Zaktualizowanie listy przyjaciol. Nazwa: " + newFriendList);
+			}
+		}
 
         /// <summary>
         /// Dodaje nowego przyjaciela
         /// </summary>
-        public void AddFriend(string name)
+        public List<Friend> AddFriend(string name)
         {
             string newFriendList;
             string query = string.Format("SELECT Friends FROM Konta WHERE Name='{0}'", Program.username);
@@ -203,7 +251,7 @@ namespace Kodunikator
                 Log.NewLog("Zaktualizowanie listy przyjaciol. Nazwa: " + newFriendList);
             }
             
-            LoadFriendList(Program.username);
+            return LoadFriendList(Program.username);
         }
     }
 

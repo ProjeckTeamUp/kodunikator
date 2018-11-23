@@ -127,6 +127,7 @@ namespace Kodunikator
 			this.friends_list.TabIndex = 2;
 			this.friends_list.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.friends_list_View_DrawItem);
 			this.friends_list.SelectedIndexChanged += new System.EventHandler(this.friends_list_SelectedIndexChanged);
+			this.friends_list.MouseDown += new MouseEventHandler(this.friends_list_MouseDown);
 			// 
 			// MainForm
 			// 
@@ -146,6 +147,11 @@ namespace Kodunikator
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
+		}
+
+		private void newFriends_list_MouseDown(object sender, MouseEventArgs e)
+		{
+			throw new NotImplementedException();
 		}
 
 		#endregion

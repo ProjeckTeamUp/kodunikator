@@ -13,9 +13,12 @@ namespace Kodunikator
     {
         private DBConnection dbCon;
 
-        public AddFriend()
+		private MainForm mf;
+
+		public AddFriend(MainForm main)
         {
             InitializeComponent();
+			mf = main;
             dbCon = new DBConnection();
             dbCon.Connect();
         }
@@ -25,26 +28,38 @@ namespace Kodunikator
             string name = addFriend_textBox.Text;
             if (name == null)
             {
-                addFriend_text.Text = "Please enter friend nickname.";
+				
+                printErrorMsg("Please enter friend nickname.");
                 return;
             }
 
             if(name == Program.username)
             {
-                addFriend_text.Text = "You cannot add youself.";
+				printErrorMsg( "You cannot add youself.");
                 return;
             }
 
             if(dbCon.FindPerson(name))
             {
-                dbCon.AddFriend(name);
+				resultToMainForm(dbCon.AddFriend(name));
                 this.Close();
             }
             else
             {
-                addFriend_text.Text = "Don't exist account with this nickname.";
+				printErrorMsg("Don't exist account with this nickname.");
                 return; 
             }
         }
+
+		private void resultToMainForm(List<Friend> friends)
+		{
+			mf.AddFriendFormResult(friends);
+		}
+
+		private void printErrorMsg(string msg)
+		{
+			new_friend_error_msg.Text = msg;
+			new_friend_error_msg.Visible = true;
+		}
     }
 }

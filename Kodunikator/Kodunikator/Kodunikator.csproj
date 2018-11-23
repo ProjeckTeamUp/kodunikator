@@ -76,6 +76,7 @@
     <Compile Include="DBConnection.cs" />
     <Compile Include="Encrypter.cs" />
     <Compile Include="Facebook.cs" />
+    <Compile Include="FbMessageListener.cs" />
     <Compile Include="LogForm.cs">
       <SubType>Form</SubType>
     </Compile>
