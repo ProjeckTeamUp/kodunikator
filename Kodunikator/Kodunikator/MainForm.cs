@@ -267,7 +267,7 @@ namespace Kodunikator
 			{
 				if (msg.author.Equals(currentFriend.fbID))
 				{
-					conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text))));
+					conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(13)))));
 				}
 			}
 		}
