@@ -12,12 +12,11 @@ using System.Windows.Forms;
 
 namespace Kodunikator
 {
-	public partial class MainForm : Form, FbMessageListener
+	public partial class MainForm : Form, FbMessageListener 
 	{
-		private IList messages;
-
         private List<Friend> friends; // Lista przyjaciół i ich danych
         private Friend currentFriend = null; // Aktualnie wybrany przyjaciel
+        private List<FB_Thread> threads; // wątki rozmów konta facebook
 
         ToolBar toolBar;
 
@@ -77,7 +76,7 @@ namespace Kodunikator
 			friendsListContextMenu.ItemClicked += FriendsListContextMenu_ItemClicked;
 			friendsListContextMenu.Opening += new CancelEventHandler(friendsListContextMenu_Opening);
 			friends_list.ContextMenuStrip = friendsListContextMenu;
-			Facebook.MessageListener = this;
+			Facebook.MessageListener = this;            
 		}
 
 		private void FriendsListContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -232,13 +231,10 @@ namespace Kodunikator
 		/// </summary>
 		private void selectFriend(int index)
 		{
-			if (!friends[index].Equals(currentFriend))
-			{
-				message_feild.Clear();
-				conversation_view.Items.Clear();
-				//TODO: załadować wiadomości usera
-				currentFriend = friends[index];
-			}
+            currentFriend = friends[index];
+            message_feild.Clear();
+			conversation_view.Items.Clear();
+            LoadMessages();				
 		}
 
 		/// <summary>
@@ -276,6 +272,43 @@ namespace Kodunikator
 
 		#endregion
 
+        /// <summary>
+        /// Ładuje wiadomości z aktualnie otworzonym przyjacielem
+        /// </summary>
+        public async void LoadMessages(int amount = 100)
+        {
+            conversation_view.Items.Clear();
+            Log.NewLog("Ładowanie wątków rozmów...");
+            threads = await Facebook.LoadThreads();
 
-	}
+            for (int i = 0; i < threads.Count; i++)
+            {
+                if(threads[i].uid == currentFriend.fbID)
+                {
+                    Log.NewLog("Znaleziono wątek rozmowy z aktualnym przyjacielem.");
+
+                    List<FB_Message> messages = await Facebook.LoadMessages(currentFriend.fbID, amount);
+
+                    for(int j=messages.Count-1; j>0; j--)
+                    {
+                        if (messages[j].text.Length > 4)
+                            if (messages[j].text.Substring(0, 5) == "#Kodu")
+                                conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Zwraca nazwę autora wiadomości
+        /// </summary>
+        public string MessagesAuthor(string uid)
+        {
+            if (uid.Equals(currentFriend.fbID))
+                return currentFriend.nickname;
+             return Program.username;
+        }
+
+
+    }
 }
