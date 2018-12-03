@@ -231,10 +231,13 @@ namespace Kodunikator
 		/// </summary>
 		private void selectFriend(int index)
 		{
-            currentFriend = friends[index];
-            message_feild.Clear();
-			conversation_view.Items.Clear();
-            LoadMessages();				
+			if (currentFriend != friends[index])
+			{
+				currentFriend = friends[index];
+				message_feild.Clear();
+				conversation_view.Items.Clear();
+				LoadMessages();
+			}
 		}
 
 		/// <summary>
