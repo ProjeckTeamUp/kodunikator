@@ -68,7 +68,6 @@ namespace Kodunikator
 			}
 			if (friends.Count != 0)
 			{
-				currentFriend = friends[0];
 				friends_list.SelectedIndex = 0;
 			}
 			friendsListContextMenu = new ContextMenuStrip();
@@ -189,9 +188,9 @@ namespace Kodunikator
 		{
 			int count = 1;
 			int pos = 0;
-			if (text.Item2.Contains("\r\n"))
+			if (text.Item2.Contains("\n"))
 			{
-				while ((pos = text.Item2.IndexOf("\r\n", pos)) != -1) { count++; pos += 2; }
+				while ((pos = text.Item2.IndexOf("\n", pos)) != -1) { count++; pos += 2; }
 				return 1 + count;
 			}
 			else
