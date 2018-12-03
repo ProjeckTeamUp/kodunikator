@@ -264,7 +264,7 @@ namespace Kodunikator
 		/// </summary>
 		public void messageArrived(FB_Message msg)
 		{
-			if (!msg.is_from_me)
+			if (!msg.is_from_me && isKodunikatorsMassege(msg.text))
 			{
 				if (msg.author.Equals(currentFriend.fbID))
 				{
@@ -280,7 +280,6 @@ namespace Kodunikator
         /// </summary>
         public async void LoadMessages(int amount = 100)
         {
-            conversation_view.Items.Clear();
             Log.NewLog("Ładowanie wątków rozmów...");
             threads = await Facebook.LoadThreads();
 
@@ -294,18 +293,28 @@ namespace Kodunikator
 
                     for(int j=messages.Count-1; j>0; j--)
                     {
-                        if (messages[j].text.Length > 4)
-                            if (messages[j].text.Substring(0, 5) == "#Kodu")
-                                conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
+                        if (isKodunikatorsMassege(messages[j].text))
+                            conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Zwraca nazwę autora wiadomości
-        /// </summary>
-        public string MessagesAuthor(string uid)
+		/// <summary>
+		///	Sprawdza czy wiadomość jest Kodunikatorowa
+		/// </summary>
+		private bool isKodunikatorsMassege(string msg)
+		{
+			if (msg.Length > 4)
+				return msg.Substring(0, 5) == "#Kodu";
+
+			return false;
+		}
+
+		/// <summary>
+		/// Zwraca nazwę autora wiadomości
+		/// </summary>
+		public string MessagesAuthor(string uid)
         {
             if (uid.Equals(currentFriend.fbID))
                 return currentFriend.nickname;
