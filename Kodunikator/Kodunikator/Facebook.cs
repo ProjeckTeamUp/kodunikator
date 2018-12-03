@@ -84,7 +84,7 @@ namespace Kodunikator
         {
             if (fb_client != null)
             {
-				fb_client.StopListening();
+				//fb_client.StopListening();
                 fb_client.DoLogout();
                 Log.NewLog("Wylogowano z konta facebook.");
             }
@@ -98,7 +98,7 @@ namespace Kodunikator
 		{
 			if(fb_client != null)
 			{
-                // return ...
+                // ...
 			}
 			return "";
 		}
@@ -111,11 +111,26 @@ namespace Kodunikator
         /// <param name="type"> 0 - klasyczna wiadomośc tekstowa. 1 - wiadomość w postaci kodu źródłowego. </param>
         public static async Task SendMessage(string text, string id, int type=0)
         {
-            string message = "#Koduniaktor\n";
+            string message = "#Kodunikator\n";
             if (type == 1)
-                message += "#Code";
+                message += "#Code\n";
             message += text;
             var msg_uid = await fb_client.SendMessage(message, thread_id: id);
+        }
+
+        /// <summary>
+        /// Ładuje wątki rozmów
+        /// </summary>
+        public static async Task<List<FB_Thread>> LoadThreads()
+        {
+            List<FB_Thread> threads = await fb_client.FetchThreadList(limit: 5);
+            return threads;
+        }
+
+        public static async Task<List<FB_Message>> LoadMessages(string uid, int messAmount)
+        {
+            List<FB_Message> messages = await fb_client.FetchThreadMessages(uid, messAmount);
+            return messages;
         }
     }
 }
