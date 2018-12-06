@@ -18,6 +18,7 @@ namespace Kodunikator
         private Friend currentFriend = null; // Aktualnie wybrany przyjaciel
         private List<FB_Thread> threads; // wątki rozmów konta facebook
 		private bool isMessageViewDownPosition = true; //flaga czy automatycznie skrolować w dół
+        private int loadMessagesLimit = 50;
 
         ToolBar toolBar;
 
@@ -127,7 +128,8 @@ namespace Kodunikator
 
 			if(conversation_view.TopIndex == 0 && e.Index == 0)
 			{
-				//Góra event
+                loadMessagesLimit *= 2;
+                LoadMessages(loadMessagesLimit);
 			}
 
 			if (e.Index != -1)
@@ -307,6 +309,7 @@ namespace Kodunikator
         /// </summary>
         public async void LoadMessages(int amount = 100)
         {
+            conversation_view.Items.Clear();
             Log.NewLog("Ładowanie wątków rozmów...");
             threads = await Facebook.LoadThreads();
 
