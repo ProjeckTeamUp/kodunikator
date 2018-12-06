@@ -17,6 +17,7 @@ namespace Kodunikator
         private List<Friend> friends; // Lista przyjaciół i ich danych
         private Friend currentFriend = null; // Aktualnie wybrany przyjaciel
         private List<FB_Thread> threads; // wątki rozmów konta facebook
+		private bool isMessageViewDownPosition = true; //flaga czy automatycznie skrolować w dół
 
         ToolBar toolBar;
 
@@ -75,7 +76,7 @@ namespace Kodunikator
 			friendsListContextMenu.ItemClicked += FriendsListContextMenu_ItemClicked;
 			friendsListContextMenu.Opening += new CancelEventHandler(friendsListContextMenu_Opening);
 			friends_list.ContextMenuStrip = friendsListContextMenu;
-			Facebook.MessageListener = this;            
+			Facebook.MessageListener = this;           
 		}
 
 		private void FriendsListContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -116,6 +117,17 @@ namespace Kodunikator
 			{
 				e = new DrawItemEventArgs(e.Graphics, e.Font, e.Bounds,
 					e.Index, e.State ^ DrawItemState.Selected, e.ForeColor, SystemColors.Control);
+			}
+			
+			if (conversation_view.TopIndex == getDownPositionTopIndex())
+				isMessageViewDownPosition = true;
+			else
+				isMessageViewDownPosition = false;
+
+
+			if(conversation_view.TopIndex == 0 && e.Index == 0)
+			{
+				//Góra event
 			}
 
 			if (e.Index != -1)
@@ -197,6 +209,18 @@ namespace Kodunikator
 				return 2;
 		}
 
+		private int getDownPositionTopIndex()
+		{
+			int itemsHeight = 0;
+			int visibleItems = 0;
+			for (int i = conversation_view.Items.Count-1; conversation_view.ClientSize.Height > itemsHeight && i > -1; i--)
+			{
+				visibleItems++;
+				itemsHeight += 20 * GetLinesNumber((Tuple<string, string>)conversation_view.Items[i]);
+			}
+			return Math.Max(conversation_view.Items.Count - visibleItems + 1, 0);
+		}
+
 		private void conversation_view_SelectedIndexChanged(object sender, EventArgs e)
 		{
 
@@ -216,6 +240,8 @@ namespace Kodunikator
 				conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
                 Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
 				message_feild.Clear();
+				if (isMessageViewDownPosition)
+					conversation_view.TopIndex = getDownPositionTopIndex();
 			}
 		}
 
@@ -268,6 +294,8 @@ namespace Kodunikator
 				if (msg.author.Equals(currentFriend.fbID))
 				{
 					conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(13)))));
+					if (isMessageViewDownPosition)
+						conversation_view.Invoke(new Action(() => conversation_view.TopIndex = getDownPositionTopIndex()));
 				}
 			}
 		}
@@ -297,6 +325,7 @@ namespace Kodunikator
                     }
                 }
             }
+			conversation_view.TopIndex = getDownPositionTopIndex();
         }
 
 		/// <summary>
