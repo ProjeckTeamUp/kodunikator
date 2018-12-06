@@ -18,6 +18,7 @@ namespace Kodunikator
         private Friend currentFriend = null; // Aktualnie wybrany przyjaciel
         private List<FB_Thread> threads; // wątki rozmów konta facebook
 		private bool isMessageViewDownPosition = true; //flaga czy automatycznie skrolować w dół
+		private bool loadingMessages = false;
         private int loadMessagesLimit = 50;
 
         ToolBar toolBar;
@@ -126,7 +127,7 @@ namespace Kodunikator
 				isMessageViewDownPosition = false;
 
 
-			if(conversation_view.TopIndex == 0 && e.Index == 0)
+			if(conversation_view.TopIndex == 0 && e.Index == 0 && !loadingMessages)
 			{
                 loadMessagesLimit *= 2;
                 LoadMessages(loadMessagesLimit);
@@ -263,7 +264,7 @@ namespace Kodunikator
 				currentFriend = friends[index];
 				message_feild.Clear();
 				conversation_view.Items.Clear();
-				LoadMessages();
+				LoadMessages(loadMessagesLimit);
 			}
 		}
 
@@ -307,9 +308,10 @@ namespace Kodunikator
         /// <summary>
         /// Ładuje wiadomości z aktualnie otworzonym przyjacielem
         /// </summary>
-        public async void LoadMessages(int amount = 100)
+        public async void LoadMessages(int amount)
         {
-            conversation_view.Items.Clear();
+			loadingMessages = true;
+			int prevCount = conversation_view.Items.Count, newCount = prevCount;
             Log.NewLog("Ładowanie wątków rozmów...");
             threads = await Facebook.LoadThreads();
 
@@ -320,23 +322,32 @@ namespace Kodunikator
                     Log.NewLog("Znaleziono wątek rozmowy z aktualnym przyjacielem.");
 
                     List<FB_Message> messages = await Facebook.LoadMessages(currentFriend.fbID, amount);
-
-                    for(int j=messages.Count-1; j>0; j--)
-                    {
-                        if (isKodunikatorsMassege(messages[j].text))
-                            conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
-                    }
+					if (messages != null)
+					{
+						conversation_view.Items.Clear();
+						for (int j = messages.Count - 1; j > 0; j--)
+						{
+							if (isKodunikatorsMassege(messages[j].text))
+								conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
+						}
+						newCount = conversation_view.Items.Count;
+					}
                 }
             }
-			conversation_view.TopIndex = getDownPositionTopIndex();
-        }
+			if (prevCount == 0)
+				conversation_view.TopIndex = getDownPositionTopIndex();
+			else
+				conversation_view.TopIndex = newCount - prevCount;
+			loadingMessages = false;
+
+		}
 
 		/// <summary>
 		///	Sprawdza czy wiadomość jest Kodunikatorowa
 		/// </summary>
 		private bool isKodunikatorsMassege(string msg)
 		{
-			if (msg.Length > 4)
+			if (msg!=null && msg.Length > 4)
 				return msg.Substring(0, 5) == "#Kodu";
 
 			return false;
