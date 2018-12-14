@@ -129,7 +129,7 @@ namespace Kodunikator
 
 			if(conversation_view.TopIndex == 0 && e.Index == 0 && !loadingMessages)
 			{
-                loadMessagesLimit *= 2;
+                loadMessagesLimit += 50;
                 LoadMessages(loadMessagesLimit);
 			}
 
@@ -240,7 +240,7 @@ namespace Kodunikator
 			}
 			else if (message_feild.Text != "") //TODO: nie wysyłać pustych akapitów
 			{
-				conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
+				//conversation_view.Items.Add(new Tuple<string, string>(Program.username, message_feild.Text));
                 Facebook.SendMessage(message_feild.Text, currentFriend.fbID);
 				message_feild.Clear();
 				if (isMessageViewDownPosition)
@@ -261,6 +261,7 @@ namespace Kodunikator
 		{
 			if (currentFriend != friends[index])
 			{
+				loadMessagesLimit = 50;
 				currentFriend = friends[index];
 				message_feild.Clear();
 				conversation_view.Items.Clear();
@@ -292,11 +293,21 @@ namespace Kodunikator
 		/// </summary>
 		public void messageArrived(FB_Message msg)
 		{
-			if (!msg.is_from_me && isKodunikatorsMassege(msg.text))
+			if (/*!msg.is_from_me &&*/ isKodunikatorsMassege(msg.text))
 			{
+				bool f = false;
 				if (msg.author.Equals(currentFriend.fbID))
 				{
 					conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(13)))));
+					f = true;
+				}
+				else if (msg.author.Equals(Facebook.GetFacebookID()))
+				{
+					conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(13)))));
+					f = true;
+				}
+				if (f)
+				{
 					if (isMessageViewDownPosition)
 						conversation_view.Invoke(new Action(() => conversation_view.TopIndex = getDownPositionTopIndex()));
 				}
@@ -340,6 +351,11 @@ namespace Kodunikator
 				conversation_view.TopIndex = newCount - prevCount;
 			loadingMessages = false;
 
+			if (conversation_view.Items.Count == 0)
+			{
+				loadMessagesLimit += 50;
+				LoadMessages(loadMessagesLimit);
+			}
 		}
 
 		/// <summary>

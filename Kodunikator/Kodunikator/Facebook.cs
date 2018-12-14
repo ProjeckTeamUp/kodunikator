@@ -73,7 +73,7 @@ namespace Kodunikator
         /// Zwraca FB ID aktualnie zalogowanego konta
         /// </summary>
         public static string GetFacebookID()
-        {           
+        {
             return fb_client.GetUserUid();
         }
 
