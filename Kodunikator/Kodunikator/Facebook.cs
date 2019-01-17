@@ -116,12 +116,20 @@ namespace Kodunikator
                 message += "#Code\n";
             message += text;
             var msg_uid = await fb_client.SendMessage(message, thread_id: id);
-        }
+			string timeStamp = GetTimestamp(DateTime.Now);
+			var tst_uid = await fb_client.SendMessage(timeStamp, thread_id: id);
+		}
 
-        /// <summary>
-        /// Ładuje wątki rozmów
-        /// </summary>
-        public static async Task<List<FB_Thread>> LoadThreads()
+
+		public static string GetTimestamp(DateTime value)
+		{
+			return value.ToString("yyyyMMddHHmmssffff");
+		}
+
+		/// <summary>
+		/// Ładuje wątki rozmów
+		/// </summary>
+		public static async Task<List<FB_Thread>> LoadThreads()
         {
             List<FB_Thread> threads = await fb_client.FetchThreadList(limit: 5);
             return threads;

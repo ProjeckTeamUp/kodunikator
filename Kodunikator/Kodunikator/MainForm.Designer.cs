@@ -32,12 +32,12 @@ namespace Kodunikator
 		private void InitializeComponent()
 		{
 			this.panel = new System.Windows.Forms.Panel();
+			this.friends_list = new System.Windows.Forms.ListBox();
 			this.main_facebook_name_sign = new System.Windows.Forms.Label();
 			this.main_username_sign = new System.Windows.Forms.Label();
 			this.message_feild = new System.Windows.Forms.TextBox();
 			this.send_btn = new System.Windows.Forms.Button();
 			this.conversation_view = new System.Windows.Forms.ListBox();
-			this.friends_list = new System.Windows.Forms.ListBox();
 			this.panel.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -53,6 +53,22 @@ namespace Kodunikator
 			this.panel.Name = "panel";
 			this.panel.Size = new System.Drawing.Size(240, 450);
 			this.panel.TabIndex = 0;
+			// 
+			// friends_list
+			// 
+			this.friends_list.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+			this.friends_list.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+			this.friends_list.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.friends_list.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			this.friends_list.FormattingEnabled = true;
+			this.friends_list.ItemHeight = 20;
+			this.friends_list.Location = new System.Drawing.Point(11, 81);
+			this.friends_list.Name = "friends_list";
+			this.friends_list.Size = new System.Drawing.Size(215, 340);
+			this.friends_list.TabIndex = 2;
+			this.friends_list.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.friends_list_View_DrawItem);
+			this.friends_list.SelectedIndexChanged += new System.EventHandler(this.friends_list_SelectedIndexChanged);
+			this.friends_list.MouseDown += new System.Windows.Forms.MouseEventHandler(this.friends_list_MouseDown);
 			// 
 			// main_facebook_name_sign
 			// 
@@ -84,15 +100,15 @@ namespace Kodunikator
 			this.message_feild.Location = new System.Drawing.Point(246, 414);
 			this.message_feild.Multiline = true;
 			this.message_feild.Name = "message_feild";
-			this.message_feild.Size = new System.Drawing.Size(473, 36);
+			this.message_feild.Size = new System.Drawing.Size(477, 36);
 			this.message_feild.TabIndex = 1;
 			// 
 			// send_btn
 			// 
 			this.send_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.send_btn.Location = new System.Drawing.Point(725, 414);
+			this.send_btn.Location = new System.Drawing.Point(729, 412);
 			this.send_btn.Name = "send_btn";
-			this.send_btn.Size = new System.Drawing.Size(75, 36);
+			this.send_btn.Size = new System.Drawing.Size(59, 36);
 			this.send_btn.TabIndex = 2;
 			this.send_btn.Text = "Send";
 			this.send_btn.UseVisualStyleBackColor = true;
@@ -112,22 +128,6 @@ namespace Kodunikator
 			this.conversation_view.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.conversation_view_View_DrawItem);
 			this.conversation_view.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.conversation_view_MeasureItem);
 			this.conversation_view.SelectedIndexChanged += new System.EventHandler(this.conversation_view_SelectedIndexChanged);
-			// 
-			// friends_list
-			// 
-			this.friends_list.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-			this.friends_list.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-			this.friends_list.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.friends_list.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-			this.friends_list.ItemHeight = 20;
-			this.friends_list.FormattingEnabled = true;
-			this.friends_list.Location = new System.Drawing.Point(11, 81);
-			this.friends_list.Name = "friends_list";
-			this.friends_list.Size = new System.Drawing.Size(215, 351);
-			this.friends_list.TabIndex = 2;
-			this.friends_list.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.friends_list_View_DrawItem);
-			this.friends_list.SelectedIndexChanged += new System.EventHandler(this.friends_list_SelectedIndexChanged);
-			this.friends_list.MouseDown += new MouseEventHandler(this.friends_list_MouseDown);
 			// 
 			// MainForm
 			// 
