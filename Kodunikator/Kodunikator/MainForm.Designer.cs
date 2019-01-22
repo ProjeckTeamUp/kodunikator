@@ -37,7 +37,7 @@ namespace Kodunikator
             this.message_feild = new System.Windows.Forms.TextBox();
             this.send_btn = new System.Windows.Forms.Button();
             this.conversation_view = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.sendCode_btn = new System.Windows.Forms.Button();
             this.panel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,15 +118,16 @@ namespace Kodunikator
             this.conversation_view.MeasureItem += new System.Windows.Forms.MeasureItemEventHandler(this.conversation_view_MeasureItem);
             this.conversation_view.SelectedIndexChanged += new System.EventHandler(this.conversation_view_SelectedIndexChanged);
             // 
-            // button1
+            // sendCode_btn
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(697, 526);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 25);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Send Code";
-            this.button1.UseVisualStyleBackColor = true;
+            this.sendCode_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.sendCode_btn.Location = new System.Drawing.Point(697, 526);
+            this.sendCode_btn.Name = "sendCode_btn";
+            this.sendCode_btn.Size = new System.Drawing.Size(100, 25);
+            this.sendCode_btn.TabIndex = 5;
+            this.sendCode_btn.Text = "Send Code";
+            this.sendCode_btn.UseVisualStyleBackColor = true;
+            this.sendCode_btn.Click += new System.EventHandler(this.sendCode_btn_Click);
             // 
             // MainForm
             // 
@@ -134,7 +135,7 @@ namespace Kodunikator
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(809, 551);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.sendCode_btn);
             this.Controls.Add(this.conversation_view);
             this.Controls.Add(this.send_btn);
             this.Controls.Add(this.message_feild);
@@ -162,6 +163,6 @@ namespace Kodunikator
 		private System.Windows.Forms.Label main_username_sign;
 		private System.Windows.Forms.ListBox conversation_view;
 		private System.Windows.Forms.ListBox friends_list;
-        private Button button1;
+        private Button sendCode_btn;
     }
 }
