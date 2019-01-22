@@ -384,6 +384,16 @@ namespace Kodunikator
 			return false;
 		}
 
+        /// <summary>
+        /// Sprawdza czy wiadomość jest fragmentem kodu
+        /// </summary>
+        private bool isCodeMessage(string msg)
+        {
+
+
+            return false;
+        }
+
 		/// <summary>
 		/// Zwraca nazwę autora wiadomości
 		/// </summary>
