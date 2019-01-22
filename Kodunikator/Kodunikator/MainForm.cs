@@ -378,7 +378,5 @@ namespace Kodunikator
                 return currentFriend.nickname;
              return Program.username;
         }
-
-
     }
 }
