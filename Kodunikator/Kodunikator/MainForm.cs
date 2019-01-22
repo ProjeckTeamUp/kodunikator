@@ -313,13 +313,20 @@ namespace Kodunikator
 				bool f = false;
 				if (msg.author.Equals(currentFriend.fbID))
 				{
-					conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(13)))));
-					f = true;
+                    if (!isCodeMessage(msg.text))
+                        conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(13)))));
+                    else
+                        conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(19)))));
+                    f = true;
 				}
 				else if (msg.author.Equals(Facebook.GetFacebookID()))
 				{
-					conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(13)))));
-					f = true;
+                    //conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(13)))));
+                    if (!isCodeMessage(msg.text))
+                        conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(13)))));
+                    else
+                        conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(19)))));
+                    f = true;
 				}
 				if (f)
 				{
@@ -353,9 +360,14 @@ namespace Kodunikator
 						conversation_view.Items.Clear();
 						for (int j = messages.Count - 1; j > 0; j--)
 						{
-							if (isKodunikatorsMassege(messages[j].text))
-								conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
-						}
+                            if (isKodunikatorsMassege(messages[j].text))
+                            {
+                                if(!isCodeMessage(messages[j].text))
+                                    conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
+                                else
+                                    conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(19)))));
+                            }
+                        }
 						newCount = conversation_view.Items.Count;
 					}
                 }
@@ -389,8 +401,9 @@ namespace Kodunikator
         /// </summary>
         private bool isCodeMessage(string msg)
         {
-
-
+            if (msg.Length >= 13)
+                if (msg[13] == '#')
+                    return true;
             return false;
         }
 
