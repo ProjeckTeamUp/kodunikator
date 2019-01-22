@@ -248,6 +248,21 @@ namespace Kodunikator
 			}
 		}
 
+        private void sendCode_btn_Click(object sender, EventArgs e)
+        {
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                message_feild.AppendText(Environment.NewLine);
+            }
+            else if (message_feild.Text != "") //TODO: nie wysyłać pustych akapitów
+            {
+                Facebook.SendMessage(message_feild.Text, currentFriend.fbID, 1);
+                message_feild.Clear();
+                if (isMessageViewDownPosition)
+                    conversation_view.TopIndex = getDownPositionTopIndex();
+            }
+        }
+
         private void OpenAddFriendForm()
         {
             AddFriend addFriend = new AddFriend(this);
