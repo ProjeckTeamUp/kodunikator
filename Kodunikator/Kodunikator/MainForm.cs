@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ using System.Windows.Forms;
 
 namespace Kodunikator
 {
-	public partial class MainForm : Form, FbMessageListener 
+	public partial class MainForm : Form, FbMessageListener, SendCodeListener
 	{
         private List<Friend> friends; // Lista przyjaciół i ich danych
         private Friend currentFriend = null; // Aktualnie wybrany przyjaciel
@@ -20,6 +21,8 @@ namespace Kodunikator
 		private bool isMessageViewDownPosition = true; //flaga czy automatycznie skrolować w dół
 		private bool loadingMessages = false;
         private int loadMessagesLimit = 50;
+		private SendCodeForm sendCodeForm;
+		private int clicked;
 
         ToolBar toolBar;
 
@@ -50,7 +53,9 @@ namespace Kodunikator
 			Controls.Add(toolBar);
 
             friends = _friends;
-        }
+
+			sendCodeForm = new SendCodeForm(this);
+		}
 
         private void toolBar_ButtonClick(Object sender, ToolBarButtonClickEventArgs e)
         {
@@ -78,7 +83,7 @@ namespace Kodunikator
 			friendsListContextMenu.ItemClicked += FriendsListContextMenu_ItemClicked;
 			friendsListContextMenu.Opening += new CancelEventHandler(friendsListContextMenu_Opening);
 			friends_list.ContextMenuStrip = friendsListContextMenu;
-			Facebook.MessageListener = this;           
+			Facebook.MessageListener = this;
 		}
 
 		private void FriendsListContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -117,6 +122,7 @@ namespace Kodunikator
 		{
 			if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
 			{
+				clicked = e.Index;
 				e = new DrawItemEventArgs(e.Graphics, e.Font, e.Bounds,
 					e.Index, e.State ^ DrawItemState.Selected, e.ForeColor, SystemColors.Control);
 			}
@@ -137,16 +143,36 @@ namespace Kodunikator
 			{
 				e.DrawBackground();
 				var dataItem = conversation_view.Items[e.Index] as Tuple<string, string>;
+				string codeTitle = isCodeMessage(dataItem.Item2);
 				var nameFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
 				e.Graphics.DrawString(dataItem.Item1, nameFont, Brushes.Black, e.Bounds.Left + 3, e.Bounds.Top + 5);
-				var msgFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
-				e.Graphics.DrawString(dataItem.Item2, msgFont, Brushes.Black, e.Bounds.Left + 30, e.Bounds.Top + 18);
+				if (codeTitle != null)
+				{
+					var msgFont = new Font("Microsoft Sans Serif", 9.0f, FontStyle.Bold);
+					e.Graphics.DrawString(codeTitle, msgFont, Brushes.Red, e.Bounds.Left + 30, e.Bounds.Top + 18);
+				}
+				else
+				{
+					var msgFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
+					e.Graphics.DrawString(dataItem.Item2, msgFont, Brushes.Black, e.Bounds.Left + 30, e.Bounds.Top + 18);
+				}
 
 				var linePen = new Pen(SystemBrushes.Control);
 				var lineStartPoint = new Point(e.Bounds.Left, e.Bounds.Height + e.Bounds.Top - 1);
 				var lineEndPoint = new Point(e.Bounds.Width, e.Bounds.Height + e.Bounds.Top - 1);
 
 				e.Graphics.DrawLine(linePen, lineStartPoint, lineEndPoint);
+			}
+		}
+
+		private void conversation_view_MouseUp(object sender, MouseEventArgs e)
+		{
+			conversation_view.SelectedIndex = -1;
+			var dataItem = conversation_view.Items[clicked] as Tuple<string, string>;
+			string codeTitle = isCodeMessage(dataItem.Item2);
+			if (codeTitle != null)
+			{
+				sendCodeForm.openFile(codeTitle);
 			}
 		}
 
@@ -203,7 +229,7 @@ namespace Kodunikator
 		{
 			int count = 1;
 			int pos = 0;
-			if (text.Item2.Contains("\n"))
+			if (text.Item2.Contains("\n") && isCodeMessage(text.Item2)==null)
 			{
 				while ((pos = text.Item2.IndexOf("\n", pos)) != -1) { count++; pos += 2; }
 				return 1 + count;
@@ -254,13 +280,7 @@ namespace Kodunikator
             {
                 message_feild.AppendText(Environment.NewLine);
             }
-            else if (message_feild.Text != "") //TODO: nie wysyłać pustych akapitów
-            {
-                Facebook.SendMessage(message_feild.Text, currentFriend.fbID, 1);
-                message_feild.Clear();
-                if (isMessageViewDownPosition)
-                    conversation_view.TopIndex = getDownPositionTopIndex();
-            }
+			sendCodeForm.Show();
         }
 
         private void OpenAddFriendForm()
@@ -311,22 +331,26 @@ namespace Kodunikator
 			if (/*!msg.is_from_me &&*/ isKodunikatorsMassege(msg.text))
 			{
 				bool f = false;
+				string title = isCodeMessage(msg.text);
 				if (msg.author.Equals(currentFriend.fbID))
 				{
-                    if (!isCodeMessage(msg.text))
-                        conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(13)))));
-                    else
-                        conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(19)))));
-                    f = true;
+					if (title == null)
+						conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text.Substring(13)))));
+					else
+					{
+						conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text))));
+						sendCodeForm.saveToFile(title, getCodeFromMsg(message_feild.Text));
+					}
+					f = true;
 				}
 				else if (msg.author.Equals(Facebook.GetFacebookID()))
 				{
-                    //conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(13)))));
-                    if (!isCodeMessage(msg.text))
-                        conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(13)))));
-                    else
-                        conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(19)))));
-                    f = true;
+					//conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(13)))));
+					if (title == null)
+						conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text.Substring(13)))));
+					else
+						conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(Program.username, msg.text))));
+					f = true;
 				}
 				if (f)
 				{
@@ -362,11 +386,12 @@ namespace Kodunikator
 						{
                             if (isKodunikatorsMassege(messages[j].text))
                             {
-                                if(!isCodeMessage(messages[j].text))
-                                    conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
-                                else
-                                    conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(19)))));
-                            }
+								string title = isCodeMessage(messages[j].text);
+								if (title==null)
+									conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text.Substring(13)))));
+								else
+									conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(MessagesAuthor(messages[j].author), messages[j].text))));
+							}
                         }
 						newCount = conversation_view.Items.Count;
 					}
@@ -399,13 +424,19 @@ namespace Kodunikator
         /// <summary>
         /// Sprawdza czy wiadomość jest fragmentem kodu
         /// </summary>
-        private bool isCodeMessage(string msg)
+        private string isCodeMessage(string msg)
         {
-            if (msg.Length >= 13)
-                if (msg[13] == '#')
-                    return true;
-            return false;
+			if (msg.Length >= 13)
+				if (msg[13] == '#')
+					return (msg.Substring(19)).Split('\n')[0];
+            return null;
         }
+
+		private string getCodeFromMsg(string msg)
+		{
+			string intro = (msg.Substring(19)).Split('\n')[0];
+			return msg.Substring(intro.Length + 1);
+		}
 
 		/// <summary>
 		/// Zwraca nazwę autora wiadomości
@@ -416,5 +447,21 @@ namespace Kodunikator
                 return currentFriend.nickname;
              return Program.username;
         }
-    }
+
+		public void sendCode(string title, string code = null)
+		{
+			if (code == null)
+			{
+				Facebook.SendMessage(message_feild.Text, currentFriend.fbID, title);
+				sendCodeForm.saveToFile(title, message_feild.Text);
+				message_feild.Clear();
+			}
+			else
+			{
+				Facebook.SendMessage(code, currentFriend.fbID, title);
+			}
+			if (isMessageViewDownPosition)
+				conversation_view.TopIndex = getDownPositionTopIndex();
+		}
+	}
 }
