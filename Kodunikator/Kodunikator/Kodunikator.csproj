@@ -76,6 +76,7 @@
     <Compile Include="DBConnection.cs" />
     <Compile Include="Encrypter.cs" />
     <Compile Include="Facebook.cs" />
+    <Compile Include="SendCodeListener.cs" />
     <Compile Include="FbMessageListener.cs" />
     <Compile Include="LogForm.cs">
       <SubType>Form</SubType>
@@ -99,6 +100,12 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SendCodeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SendCodeForm.Designer.cs">
+      <DependentUpon>SendCodeForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AddFriend.resx">
       <DependentUpon>AddFriend.cs</DependentUpon>
     </EmbeddedResource>
@@ -119,6 +126,9 @@
     </Compile>
     <EmbeddedResource Include="RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SendCodeForm.resx">
+      <DependentUpon>SendCodeForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

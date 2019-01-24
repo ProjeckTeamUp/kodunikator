@@ -109,11 +109,11 @@ namespace Kodunikator
         /// <param name="text"> Tekst wiadomości. </param>
         /// <param name="id"> ID konta facebook odbiorcy wiadomości. </param>
         /// <param name="type"> 0 - klasyczna wiadomośc tekstowa. 1 - wiadomość w postaci kodu źródłowego. </param>
-        public static async Task SendMessage(string text, string id, int type=0)
+        public static async Task SendMessage(string text, string id, string codeTitle=null)
         {
             string message = "#Kodunikator\n";
-            if (type == 1)
-                message += "#Code\n";
+            if (codeTitle != null)
+                message += "#Code " + codeTitle + "\n";
             message += text;
             var msg_uid = await fb_client.SendMessage(message, thread_id: id);
 			string timeStamp = GetTimestamp(DateTime.Now);
