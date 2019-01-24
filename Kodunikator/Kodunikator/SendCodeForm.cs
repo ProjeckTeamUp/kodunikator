@@ -35,6 +35,9 @@ namespace Kodunikator
 			code_file_name_box.Items.AddRange(files.ToArray());
 		}
 
+		/// <summary>
+		/// Sprawdza dane, i wysyła do zapisania i wysłania
+		/// </summary>
 		private void save_and_send_btn_Click(object sender, EventArgs e)
 		{
 			if (code_file_name_box.Text.Equals(String.Empty))
@@ -72,6 +75,9 @@ namespace Kodunikator
 			save_code_error_msg.Visible = true;
 		}
 
+		/// <summary>
+		/// Zapisuje do pliku kod
+		/// </summary>
 		public void saveToFile(string title, string code)
 		{
 			using (StreamWriter file =new StreamWriter(directory + "\\" + title, false))
@@ -81,6 +87,9 @@ namespace Kodunikator
 			files.Add(title);
 		}
 
+		/// <summary>
+		/// Otwiera plik
+		/// </summary>
 		internal void openFile(string codeTitle)
 		{
 			Process.Start(directory + "\\" + codeTitle);

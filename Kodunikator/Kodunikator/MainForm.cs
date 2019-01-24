@@ -172,6 +172,7 @@ namespace Kodunikator
 			string codeTitle = isCodeMessage(dataItem.Item2);
 			if (codeTitle != null)
 			{
+				sendCodeForm.saveToFile(codeTitle, getCodeFromMsg(dataItem.Item2));
 				sendCodeForm.openFile(codeTitle);
 			}
 		}
@@ -339,7 +340,6 @@ namespace Kodunikator
 					else
 					{
 						conversation_view.Invoke(new Action(() => conversation_view.Items.Add(new Tuple<string, string>(currentFriend.nickname, msg.text))));
-						sendCodeForm.saveToFile(title, getCodeFromMsg(message_feild.Text));
 					}
 					f = true;
 				}
@@ -432,6 +432,9 @@ namespace Kodunikator
             return null;
         }
 
+		/// <summary>
+		/// Zwraca kod bez nazwy i tagów
+		/// </summary>
 		private string getCodeFromMsg(string msg)
 		{
 			string intro = (msg.Substring(19)).Split('\n')[0];
@@ -448,6 +451,9 @@ namespace Kodunikator
              return Program.username;
         }
 
+		/// <summary>
+		/// Dostaje tytuł pliku do zapisania i wysłania.
+		/// </summary>
 		public void sendCode(string title, string code = null)
 		{
 			if (code == null)
